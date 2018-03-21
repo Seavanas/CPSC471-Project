@@ -1,0 +1,64 @@
+[debug] [2018-03-21T16:01:00.776Z] ----------------------------------------------------------------------
+[debug] [2018-03-21T16:01:00.787Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Ryan\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-03-21T16:01:00.787Z] CLI Version:   3.15.3
+[debug] [2018-03-21T16:01:00.787Z] Platform:      win32
+[debug] [2018-03-21T16:01:00.787Z] Node Version:  v6.10.3
+[debug] [2018-03-21T16:01:00.788Z] Time:          Wed Mar 21 2018 10:01:00 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:01:00.788Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-21T16:01:00.858Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-21T16:01:00.859Z] > authorizing via signed-in user
+[debug] [2018-03-21T16:01:00.861Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-03-21T16:01:00.861Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/kqn6dCcASRGUmHsHtmDYYU3opxtNIdsPW5zA7LJw9t0',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Mar 21 2018 10:01:00 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:01:01.080Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T16:01:01.151Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/instacomm-da2a2  
+ Wed Mar 21 2018 10:01:01 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:01:01.677Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T16:01:01.677Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/instacomm-da2a2/tokens  
+ Wed Mar 21 2018 10:01:01 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:01:02.062Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Ryan\Documents\CPSC471-Project'...
+[info] 
+[debug] [2018-03-21T16:01:02.065Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/instacomm-da2a2  
+ Wed Mar 21 2018 10:01:02 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:01:02.408Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T16:01:02.409Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/573316922306/clients/_:getWebAppConfig  
+ Wed Mar 21 2018 10:01:02 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:01:03.189Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+
+[debug] [2018-03-21T16:24:09.250Z] ----------------------------------------------------------------------
+[debug] [2018-03-21T16:24:09.252Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Ryan\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-03-21T16:24:09.253Z] CLI Version:   3.15.3
+[debug] [2018-03-21T16:24:09.253Z] Platform:      win32
+[debug] [2018-03-21T16:24:09.253Z] Node Version:  v6.10.3
+[debug] [2018-03-21T16:24:09.253Z] Time:          Wed Mar 21 2018 10:24:09 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:24:09.253Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-21T16:24:09.266Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-21T16:24:09.267Z] > authorizing via signed-in user
+[debug] [2018-03-21T16:24:09.270Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/instacomm-da2a2  
+ Wed Mar 21 2018 10:24:09 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:24:09.768Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T16:24:09.769Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/instacomm-da2a2/tokens  
+ Wed Mar 21 2018 10:24:09 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:24:10.249Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Ryan\Documents\CPSC471-Project'...
+[info] 
+[debug] [2018-03-21T16:24:10.252Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/instacomm-da2a2  
+ Wed Mar 21 2018 10:24:10 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:24:10.647Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T16:24:10.647Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/573316922306/clients/_:getWebAppConfig  
+ Wed Mar 21 2018 10:24:10 GMT-0600 (Mountain Daylight Time)
+[debug] [2018-03-21T16:24:11.109Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+
