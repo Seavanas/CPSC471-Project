@@ -1,1 +1,39 @@
-<h1>Hi</h1>
+<!-- Login Box -->
+<div class="container text-center" style="width: 500px;margin: 36px">
+
+  <div id="userError" class="alert alert-danger" style="visibility: hidden" role="alert">
+    This is a danger alert—check it out!
+  </div>
+  <div class="container rounded border" style="min-height: 300px; padding: 48px;">
+    <form>
+      <div class="row">
+        <div class="col">
+          <h4 class="my-4">Login
+            <small style="color: orangered">Please enter you information.</small>
+          </h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <input id="email" class="rounded w-100" placeholder="Email" type="text" />
+        </div>
+
+      </div>
+      <div class="row top-buffer">
+        <div class="col">
+          <input id="password" class="rounded w-100" placeholder="password" type="password">
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col">
+          <button id="loginSubmit" class="btn btn-primary float-right" type="submit">Submit</button>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col">
+          <a href="#!/register" style="color: orangered">Not registered? Create an account.</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

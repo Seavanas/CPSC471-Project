@@ -19,7 +19,21 @@
     <!-- External Libaries -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+    <base href="/">
 
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyByX921MypqYKzUh60dH_G5PI3Ie5pEDC4",
+        authDomain: "instacomm-da2a2.firebaseapp.com",
+        databaseURL: "https://instacomm-da2a2.firebaseio.com",
+        projectId: "instacomm-da2a2",
+        storageBucket: "instacomm-da2a2.appspot.com",
+        messagingSenderId: "573316922306"
+      };
+      firebase.initializeApp(config);
+    </script>
   </head>
 
   <body ng-app="myApp">
@@ -47,6 +61,9 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#!/signout">Sign Out</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -69,24 +86,36 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Script-->
+    <script src="js/script.js"></script>
+
     <script>
       var app = angular.module("myApp", ["ngRoute"]);
-      app.config(function($routeProvider) {
-        $routeProvider
-          .when("/", {
-            templateUrl : "main.htm"
-          })
-          .when("/red", {
-            templateUrl : "red.htm"
-          })
-          .when("/green", {
-            templateUrl : "green.htm"
-          })
-          .when("/blue", {
-            templateUrl : "blue.htm"
+      app.config(['$routeProvider', '$locationProvider',
+        function($routeProvider, $locationProvider) {
+          $routeProvider.
+          when('/', {
+            templateUrl: 'main.htm',
+            controller: 'MainController'
+          }).
+          when('/home', {
+            templateUrl: 'home.htm'
+          }).
+          when('/register', {
+            templateUrl: 'register.htm'
+          }).
+          otherwise({
+            templateUrl: '404.html'
           });
-      });
+        }])
+        .controller('MainController', function($scope, $route, $routeParams, $location) {
+          $('#loginSubmit').on('click' ,function(){
+            toggleSignIn();
+          });
+        });
     </script>
+
+
   </body>
 
 </html>
