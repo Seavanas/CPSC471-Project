@@ -37,7 +37,6 @@
   </head>
 
   <body ng-app="myApp">
-
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
@@ -88,6 +87,7 @@
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Custom Script-->
     <script src="js/script.js"></script>
+    <script src="js/SS.js"></script>
 
     <script>
       var app = angular.module("myApp", ["ngRoute"]);
@@ -101,6 +101,10 @@
           when('/home', {
             templateUrl: 'home.htm'
           }).
+          when('/new-post', {
+            templateUrl: 'new-post.htm',
+            controller: 'SSController'
+          }).
           when('/register', {
             templateUrl: 'register.htm'
           }).
@@ -111,7 +115,12 @@
         .controller('MainController', function($scope, $route, $routeParams, $location) {
           $('#loginSubmit').on('click' ,function(){
             toggleSignIn();
-          });
+          })
+        })
+        .controller('SSController', function($scope, $route, $routeParams, $location) {
+          $('#post_submit').on('click' ,function(){
+            createPost();
+          })
         });
     </script>
 
