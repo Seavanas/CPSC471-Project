@@ -101,12 +101,16 @@
           when('/home', {
             templateUrl: 'home.htm'
           }).
+          when('/register', {
+            templateUrl: 'register.htm'
+          }).
           when('/new-post', {
             templateUrl: 'new-post.htm',
             controller: 'SSController'
           }).
-          when('/register', {
-            templateUrl: 'register.htm'
+          when('/course-main', {
+            templateUrl: 'course-main.htm',
+            controller: 'SSController'
           }).
           otherwise({
             templateUrl: '404.html'
@@ -121,6 +125,7 @@
           $('#post_submit').on('click' ,function(){
             createPost();
           })
+          getCoursePostList()
         });
     </script>
 

@@ -9,10 +9,9 @@ function SStest() {
 function createPost() {
   let post_content = $("#post_content").val();
   let post_ref = firebase.database().ref("Post");
-  var post_count;
 
   post_ref.once("value").then(function(snapshot){
-    post_count = snapshot.val().Post_count;
+    let post_count = snapshot.val().Post_count;
 
     post_count++;
     post_ref.update({
@@ -29,4 +28,18 @@ function createPost() {
 
   $("#p1").text(post_content);
   console.log(post_content);
+}
+
+function getCoursePostList() {
+  let post_ref = firebase.database().ref("Post");
+  let post_list = [];
+
+  post_ref.once("value", function(snapshot){
+    snapshot.forEach(function(childSnapshot){
+      if (childSnapshot.key != 'Post_count')
+      {
+        console.log(childSnapshot.key);
+      }
+    })
+  });
 }
