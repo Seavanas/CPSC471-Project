@@ -7,6 +7,7 @@ function SStest() {
 }
 
 function createPost() {
+  let post_title = $("#post_title").val();
   let post_content = $("#post_content").val();
   let post_ref = firebase.database().ref("Post");
 
@@ -20,7 +21,7 @@ function createPost() {
   });
 
   post_ref.push().set({
-    Title: 'Lecture1',
+    Title: post_title,
     Post_content: post_content,
     'Date': '0230',
     User_ID: '0123456789'
@@ -36,9 +37,12 @@ function getCoursePostList() {
 
   post_ref.once("value", function(snapshot){
     snapshot.forEach(function(childSnapshot){
-      if (childSnapshot.key != 'Post_count')
+      let post_key = childSnapshot.key;
+      if (post_key != 'Post_count')
       {
-        console.log(childSnapshot.key);
+        let post_title = childSnapshot.val().Title;
+        $("#post_list").append("<a href=\"#\" class=\"list-group-item\">"+post_title+"</a>");
+        console.log(post_key);
       }
     })
   });

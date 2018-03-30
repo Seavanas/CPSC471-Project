@@ -106,11 +106,11 @@
           }).
           when('/new-post', {
             templateUrl: 'new-post.htm',
-            controller: 'SSController'
+            controller: 'NewPostController'
           }).
           when('/course-main', {
             templateUrl: 'course-main.htm',
-            controller: 'SSController'
+            controller: 'CoureMainController'
           }).
           otherwise({
             templateUrl: '404.html'
@@ -121,10 +121,12 @@
             toggleSignIn();
           })
         })
-        .controller('SSController', function($scope, $route, $routeParams, $location) {
+        .controller('NewPostController', function($scope, $route, $routeParams, $location) {
           $('#post_submit').on('click' ,function(){
             createPost();
           })
+        })
+        .controller('CoureMainController', function($scope, $route, $routeParams, $location) {
           getCoursePostList()
         });
     </script>
