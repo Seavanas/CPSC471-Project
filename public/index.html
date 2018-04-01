@@ -110,6 +110,9 @@
             templateUrl: 'new-post.htm',
             controller: 'SSController'
           }).
+          when('/post-display', {
+            templateUrl: 'post-display.htm'
+          }).
           when('/course-main', {
             templateUrl: 'course-main.htm',
             controller: 'SSController'
@@ -132,7 +135,7 @@
 		.controller('CourseController', function($scope, $route, $routeParams, $location) {
           getCourse()
         });
-		
+
     </script>
 
 
