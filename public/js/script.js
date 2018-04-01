@@ -3,11 +3,12 @@
  */
 function toggleSignIn() {
   if (firebase.auth().currentUser) {
-    firebase.database().ref("users/" + firebase.auth().currentUser.uid).once('value').then(function(snapshot){
+    firebase.database().ref("Users/" + firebase.auth().currentUser.uid).once('value').then(function(snapshot){
+      console.log(snapshot.val());
       if(!snapshot.val()){
         window.location.href = "/#!/register"
       }else{
-        displayUserData(snapshot.val());
+        // displayUserData(snapshot.val());
         window.location.href = "/#!/home";
       }
     });
@@ -42,43 +43,6 @@ function validateEmail(email) {
   return re.test(email);
 }
 
-function loadSignUp() {
-  $("#btnSignUp").click(function(){toggleSignUp()});
-  firebase.auth().onAuthStateChanged(function(user) {
-    let firstName = $("#firstName").val();
-    let lastName = $("#lastName").val();
-    let email = $("#email").val();
-    let password = $("#password").val();
-    if (user) {
-      $("#emailCell").css("display", "none");
-      if(!firstName.length<1 && !lastName.length<1) {
-        writeUserData(user.uid, firstName, lastName, user.email);
-        window.location.href = "/#!/"
-      }else {
-        console.log("form not filled")
-      }
-      console.log(user);
-      // User is signed in.
-      // window.location.href = "/#!/";
-      let displayName = user.displayName;
-      let email = user.email;
-      let photoURL = user.photoURL;
-      let emailVerified = user.emailVerified;
-      let isAnonymous = user.isAnonymous;
-      let uid = user.uid;
-      let providerData = user.providerData;
-      firebase.database().ref("users/" + uid).once('value').then(function(snapshot){
-        if(!snapshot.val()){
-          window.location.href = "/#!/signin/signup"
-        }else{
-          displayUserData(snapshot.val());
-          window.location.href = "/#!/";
-        }
-      });
-    }
-  });
-}
-
 function toggleSignUp() {
   let firstName = $("#firstName").val();
   let lastName = $("#lastName").val();
@@ -92,9 +56,16 @@ function toggleSignUp() {
     if(user) {
       console.log("hit");
       if(!firstName.length<1 && !lastName.length<1) {
-        writeUserData(user.uid, firstName, lastName, user.email);
+        firebase.database().ref("users/" + user.uid).update({
+          userType: "student",
+          email: email,
+          uid: firebase.auth().currentUser.uid,
+          firstName: firstName,
+          lastName: lastName,
+          fullName: firstName + " " + lastName
+        });
         console.log("success!");
-        window.location.href = "/#!/";
+        window.location.href = "/#!/home";
       }
     }
   });

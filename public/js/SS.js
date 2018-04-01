@@ -23,8 +23,8 @@ function createPost() {
   post_ref.push().set({
     Title: post_title,
     Post_content: post_content,
-    'Date': '0230',
-    User_ID: '0123456789'
+    time_posted: firebase.database.ServerValue.TIMESTAMP,
+    User_ID: firebase.auth().currentUser.uid
   });
 
   $("#p1").text(post_content);
