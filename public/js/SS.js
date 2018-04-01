@@ -41,7 +41,7 @@ function getCoursePostList() {
       if (post_key != 'Post_count')
       {
         let post_title = childSnapshot.val().Title;
-        $("#post_list").append("<a href=\"#\" class=\"list-group-item\">"+post_title+"</a>");
+        $("#post_list").append("<a href=\"#!/post-display?"+post_key+"\" class=\"list-group-item\">"+post_title+"</a>");
         console.log(post_key);
       }
     })
