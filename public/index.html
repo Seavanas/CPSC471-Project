@@ -88,6 +88,7 @@
     <!-- Custom Script-->
     <script src="js/script.js"></script>
     <script src="js/SS.js"></script>
+	<script src="js/CourseSS.js"></script>
 
     <script>
       var app = angular.module("myApp", ["ngRoute"]);
@@ -99,21 +100,19 @@
             controller: 'MainController'
           }).
           when('/home', {
-            templateUrl: 'home.htm'
+            templateUrl: 'home.htm',
+			controller: 'CourseController'
           }).
           when('/register', {
             templateUrl: 'register.htm'
           }).
-          when('/post-display', {
-            templateUrl: 'post-display.htm'
-          }).
           when('/new-post', {
             templateUrl: 'new-post.htm',
-            controller: 'NewPostController'
+            controller: 'SSController'
           }).
           when('/course-main', {
             templateUrl: 'course-main.htm',
-            controller: 'CoureMainController'
+            controller: 'SSController'
           }).
           otherwise({
             templateUrl: '404.html'
@@ -124,14 +123,16 @@
             toggleSignIn();
           })
         })
-        .controller('NewPostController', function($scope, $route, $routeParams, $location) {
+        .controller('SSController', function($scope, $route, $routeParams, $location) {
           $('#post_submit').on('click' ,function(){
             createPost();
           })
-        })
-        .controller('CoureMainController', function($scope, $route, $routeParams, $location) {
           getCoursePostList()
+        })
+		.controller('CourseController', function($scope, $route, $routeParams, $location) {
+          getCourse()
         });
+		
     </script>
 
 
