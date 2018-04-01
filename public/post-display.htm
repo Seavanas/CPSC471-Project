@@ -1,23 +1,36 @@
-<div class="container rounded border" style="min-height: 900px;">
-  <div class="container rounded border" style="min-height: 50px;">
+<div class="container rounded border top-buffer" style="min-height: 900px;">
+  <div class="container" style="min-height: 50px;">
     <h1>Post_Name</h1>
   </div>
   <div class="container rounded border" style="min-height: 200px;">
     <p>Post_Content</p>
   </div>
-  <div>
-    <p>insert comment below</p>
-  </div>
-  <div class="form-group">
-      <textarea id="post_content" class="form-control" rows="2"></textarea>
-  </div>
-  <div class="container rounded border" style="min-height: 200px;">
-    <p>Comment_Section</p>
-    <ul>
-      <li>
-        <div class="container rounded border" style="min-height: 20px;">
-          <p>test comment</p>
+
+
+  <div class="container top-buffer" style="min-height: 200px;">
+    <h3>Comment_Section</h3>
+    <div>
+      <p>Insert comment below:</p>
+      <div class="form-group">
+        <textarea id="post_content" class="form-control" rows="2"></textarea>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-primary float-right">Post Comment</button>
+          </div>
         </div>
+      </div>
+    </div>
+    <ul class="list-group top-buffer">
+      <li class="list-group-item">
+        <p>test comment</p>
+      </li>
+      <li class="list-group-item">
+        <p>test comment</p>
+      </li>
+      <li class="list-group-item">
+        <p>test comment</p>
       </li>
     </ul>
   </div>
