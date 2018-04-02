@@ -124,12 +124,6 @@
         });
     }])
     .controller('MainController', function($scope, $route, $routeParams, $location) {
-      firebase.auth().onAuthStateChanged(function (user) {
-        window.location.href = "/#!/home"
-      });
-      if(firebase.auth().currentUser){
-        window.location.href = "/#!/home"
-      }
       $('#loginSubmit').on('click' ,function(){
         toggleSignIn();
       })
