@@ -112,10 +112,10 @@
           templateUrl: 'new-post.htm',
           controller: 'SSController'
         })
-        .when('/post-display', {
+        .when('/post/:Post_ID', {
           templateUrl: 'post-display.htm'
         })
-        .when('/course/:courseid', {
+        .when('/course/:Course_ID', {
           templateUrl: 'course-main.htm',
           controller: 'SSController'
         })
@@ -132,8 +132,8 @@
       $('#post_submit').on('click' ,function(){
         createPost();
       });
-      console.log($routeParams);
-      getCoursePostList();
+      //console.log($routeParams);
+      getCoursePostList($routeParams);
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
       $('#signInSubmit').on('click' ,function(){
