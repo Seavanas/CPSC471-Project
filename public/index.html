@@ -112,8 +112,9 @@
           templateUrl: 'new-post.htm',
           controller: 'SSController'
         })
-        .when('/post/:Post_ID', {
-          templateUrl: 'post-display.htm'
+        .when('/course/:Course_ID/post/:Post_ID', {
+          templateUrl: 'post-display.htm',
+          controller: 'postController'
         })
         .when('/course/:Course_ID', {
           templateUrl: 'course-main.htm',
@@ -141,9 +142,8 @@
       });
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
-      getCourse()
+      getCourse();
     });
-
 </script>
 
 

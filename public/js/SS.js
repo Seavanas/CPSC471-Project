@@ -32,21 +32,15 @@ function createPost() {
 }
 
 function getCoursePostList(routeParams) {
-  let post_ref = firebase.database().ref("Post");
+  let post_ref = firebase.database().ref("Post/" + routeParams.Course_ID);
   let post_list = [];
-  let Course_ID = routeParams.Course_ID;
-
-  console.log(Course_ID);
 
   post_ref.once("value", function(snapshot){
     snapshot.forEach(function(childSnapshot){
       let Post_ID = childSnapshot.key;
-      if (Post_ID != 'Post_count' && childSnapshot.val().Course_ID.localeCompare(Course_ID) == 0)
-      {
-        let post_title = childSnapshot.val().Title;
-        $("#post_list").append("<a href=\"#!/post/"+Post_ID+"\" class=\"list-group-item\">"+post_title+"</a>");
-        console.log(Post_ID);
-      }
+      let post_title = childSnapshot.val().Title;
+      $("#post_list").append("<a href=/#!/course/" + routeParams.Course_ID +"/post/"+ Post_ID + "\" class=\"list-group-item\">"+post_title+"</a>");
+      console.log(Post_ID);
     })
   });
 }
