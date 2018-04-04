@@ -1,16 +1,35 @@
 /**
  * Created by Ryan on 2018-03-23.
  */
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    // window.location.href = "/#!/";
+    let displayName = user.displayName;
+    let email = user.email;
+    let photoURL = user.photoURL;
+    let emailVerified = user.emailVerified;
+    let isAnonymous = user.isAnonymous;
+    let uid = user.uid;
+    let providerData = user.providerData;
+    firebase.database().ref("Users/" + uid).once('value').then(function(snapshot){
+        displayUserData(snapshot.val());
+    });
+  }
+});
+
+function displayUserData(user){
+  console.log(user);
+  $(".authed").css("display","unset");
+  $(".authName").text(user.fullName);
+}
+
 function toggleSignIn() {
   if (firebase.auth().currentUser) {
     firebase.database().ref("Users/" + firebase.auth().currentUser.uid).once('value').then(function(snapshot){
-      console.log(snapshot.val());
-      if(!snapshot.val()){
-        window.location.href = "/#!/register"
-      }else{
         // displayUserData(snapshot.val());
         window.location.href = "/#!/home";
-      }
     });
   } else {
     let email = document.getElementById('email').value;
@@ -35,6 +54,7 @@ function toggleSignIn() {
       $("#userError").text(errorMessage);
       console.log(error);
     });
+    window.location.href = "/#!/home";
   }
 }
 
@@ -113,5 +133,6 @@ function changePostDisplay(routeParams){
 
 function toggleSignOut(){
   firebase.auth().signOut();
+  $(".authed").css("display","none");
   window.location.href = "/#!/";
 }
