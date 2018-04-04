@@ -39,8 +39,14 @@ function getCoursePostList(routeParams) {
     snapshot.forEach(function(childSnapshot){
       let Post_ID = childSnapshot.key;
       let post_title = childSnapshot.val().Title;
-      $("#post_list").append("<a href=\"/#!/course/" + routeParams.Course_ID +"/post/"+ Post_ID + "\" class=\"list-group-item\">"+post_title+"</a>");
-      console.log(Post_ID);
+      firebase.database().ref("Users/" + childSnapshot.val().User_ID).once('value').then(snap => {
+        $("#post_list").append("<a href='/#!/course/" + routeParams.Course_ID +"/post/"+ Post_ID + "' class='list-group-item'>"
+          + "<h4>" + post_title + "</h4>"
+          + "<p>" + snap.val().fullName +"</p>"
+          + "<p class='text-right'>View Details</p>"
+          +"</a>");
+      });
+
     })
   });
 }
