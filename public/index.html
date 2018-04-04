@@ -163,6 +163,7 @@
         createPost();
       });
       //console.log($routeParams);
+      $("#course").text($routeParams.Course_ID);
       getCoursePostList($routeParams);
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
