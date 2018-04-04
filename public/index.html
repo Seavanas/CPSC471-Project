@@ -19,7 +19,7 @@
   <!-- External Libaries -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/locale/en-ca.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.js"></script>
   <base href="/">
 
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
@@ -114,7 +114,7 @@
         })
         .when('/course/:Course_ID/post/:Post_ID', {
           templateUrl: 'post-display.htm',
-          controller: 'postController'
+          controller: 'PostController'
         })
         .when('/course/:Course_ID', {
           templateUrl: 'course-main.htm',
@@ -140,6 +140,9 @@
       $('#signInSubmit').on('click' ,function(){
         toggleSignUp();
       });
+    })
+    .controller('PostController', function($scope, $route, $routeParams, $location){
+      changePostDisplay($routeParams);
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
       getCourse();

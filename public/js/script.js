@@ -79,3 +79,25 @@ function toggleSignUp() {
     });
   }
 }
+
+function changePostDisplay(routeParams){
+  firebase.database().ref("Post/" + routeParams.Course_ID+ "/" + routeParams.Post_ID).once('value').then(snap => {
+    $("#title").text(snap.val().Title);
+    $("#content").text(snap.val().Post_content);
+    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
+      $("#author").text(snap.val().fullName);
+    });
+    $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
+  });
+
+  // Load Comments
+  firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
+
+
+
+    // Load SubComments
+    firebase.database().ref("SubComment/" + snap.key).once('child_added', snap2 => {
+
+    });
+  })
+}
