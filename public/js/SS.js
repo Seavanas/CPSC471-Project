@@ -23,7 +23,7 @@ function createPost() {
   post_ref.push().set({
     Title: post_title,
     Post_content: post_content,
-    time_posted: firebase.database.ServerValue.TIMESTAMP,
+    Timestamp: firebase.database.ServerValue.TIMESTAMP,
     User_ID: firebase.auth().currentUser.uid
   });
 
@@ -42,7 +42,8 @@ function getCoursePostList(routeParams) {
       firebase.database().ref("Users/" + childSnapshot.val().User_ID).once('value').then(snap => {
         $("#post_list").append("<a href='/#!/course/" + routeParams.Course_ID +"/post/"+ Post_ID + "' class='list-group-item'>"
           + "<h4>" + post_title + "</h4>"
-          + "<p>" + snap.val().fullName +"</p>"
+          + "<i class='far fa-user'></i> <span>" + snap.val().fullName +"</span>&nbsp;"
+          + "<i class='far fa-clock'></i> <span>" + new moment(childSnapshot.val().Timestamp).fromNow() +"</span>"
           + "<p class='text-right'>View Details</p>"
           +"</a>");
       });
