@@ -168,9 +168,11 @@
         createPost();
       });
       //console.log($routeParams);
-      $("#course").text($routeParams.Course_ID);
-      $("#title").text($routeParams.Course_ID);
+      $(".course").text($routeParams.Course_ID);
+      $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
+      $("#newPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
       getCoursePostList($routeParams);
+      getCourseNotifcationList($routeParams);
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
       $('#signInSubmit').on('click' ,function(){

@@ -51,3 +51,23 @@ function getCoursePostList(routeParams) {
     })
   });
 }
+
+function getCourseNotifcationList(routeParams) {
+  let post_ref = firebase.database().ref("Notification/" + routeParams.Course_ID);
+  let post_list = [];
+
+  post_ref.limitToFirst(3).once("value", function(snapshot){
+    snapshot.forEach(function(childSnapshot){
+      let Post_ID = childSnapshot.key;
+      let post_title = childSnapshot.val().Title;
+      firebase.database().ref("Users/" + childSnapshot.val().User_ID).once('value').then(snap => {
+        $("#notifications_list").append("<li class='list-group-item'>"
+          + "<h6>" + childSnapshot.val().Text + "</h6>"
+          + "<i class='far fa-user'></i> <span>" + snap.val().fullName +"</span>&nbsp;"
+          + "<i class='far fa-clock'></i> <span>" + new moment(childSnapshot.val().Timestamp).fromNow() +"</span>"
+          +"</li>");
+      });
+
+    })
+  });
+}
