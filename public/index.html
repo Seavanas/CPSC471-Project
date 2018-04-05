@@ -15,11 +15,21 @@
   <!-- Custom styles for this template -->
   <link href="css/custom.css" rel="stylesheet">
 
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
   <!-- External Libaries -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.js"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.date.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.time.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.date.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.time.css" type="text/css">
 
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   <script>
@@ -87,9 +97,7 @@
   <!-- /.container -->
 </footer>
 
-<!-- Bootstrap core JavaScript -->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <!-- Custom Script-->
 <script src="js/script.js"></script>
 <script src="js/SS.js"></script>
@@ -137,7 +145,7 @@
         })
         .when('/course/:Course_ID/new_notification', {
           templateUrl: 'new-notification.htm',
-          controller: 'NewNotifactionController'
+          controller: 'NewNotificationController'
         })
         .when('/signout', {
           templateUrl: 'main.htm',
@@ -181,6 +189,28 @@
     })
     .controller('PostController', function($scope, $route, $routeParams, $location){
       changePostDisplay($routeParams);
+    })
+    .controller('NewPostController', function($scope, $route, $routeParams, $location){
+      $()
+    })
+    .controller('NewNotificationController', function($scope, $route, $routeParams, $location){
+      $("#timepicker").pickatime();
+      $("#datepicker").pickadate();
+      $("#note_submit").on('click', function(){
+        let time = $("#timepicker").pickatime('picker').get('select').pick;
+        let date = + $("#datepicker").pickadate('picker').get('select').pick;
+        let timeStamp = time + date;
+        let message = $("#message").val();
+        if(time > 0 && date > 0 && message.length > 5){
+          console.log("pushed");
+          firebase.database().ref("/Notification/" + $routeParams.Course_ID).push().set({
+            Text: message,
+            Timestamp: timeStamp,
+            User_ID: firebase.auth().currentUser.uid
+          });
+          window.location.href = "/#!/course/" + $routeParams.Course_ID;
+        }
+      });
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
       firebase.auth().onAuthStateChanged(function(user){

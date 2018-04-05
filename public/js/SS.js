@@ -56,7 +56,7 @@ function getCourseNotifcationList(routeParams) {
   let post_ref = firebase.database().ref("Notification/" + routeParams.Course_ID);
   let post_list = [];
 
-  post_ref.limitToFirst(3).once("value", function(snapshot){
+  post_ref.limitToLast(3).once("value", function(snapshot){
     snapshot.forEach(function(childSnapshot){
       let Post_ID = childSnapshot.key;
       let post_title = childSnapshot.val().Title;
