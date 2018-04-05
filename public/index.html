@@ -186,6 +186,7 @@
     })
     .controller('PostController', function($scope, $route, $routeParams, $location){
       changePostDisplay($routeParams);
+      createPostComment($routeParams);
     })
     .controller('NewPostController', function($scope, $route, $routeParams, $location){
       createPost($routeParams);

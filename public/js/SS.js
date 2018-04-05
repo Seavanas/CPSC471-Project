@@ -26,6 +26,33 @@ function createPost($routeParams) {
   });
 }
 
+function createPostComment(routeParams) {
+  $("#post_comment_submit").on('click', function(){
+    let commentRef = firebase.database().ref("/Comment/");
+    commentRef.once("value", function(snapshot) {
+      let Post_ID = routeParams.Post_ID;
+      if (!snapshot.hasChild(Post_ID))
+      {
+        console.log("no");
+        commentRef.child(Post_ID).set({
+          temp: 0
+        });
+      }
+
+      let postRef = commentRef.child(Post_ID);
+      let key = postRef.push().key;
+      let content = $('#post_comment_content').val();
+      postRef.child(key).set({
+        Text: content,
+        Timestamp: firebase.database.ServerValue.TIMESTAMP,
+        User_ID: firebase.auth().currentUser.uid
+      });
+
+      postRef.child("temp").remove();
+    });
+  });
+}
+
 function getCoursePostList(routeParams) {
   let post_ref = firebase.database().ref("Post/" + routeParams.Course_ID);
   let post_list = [];
