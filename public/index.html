@@ -47,10 +47,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
+      <a class="authed nav-link" style="color: white">Welcome <span class="authName"></span></a>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="authed nav-link" style="color: white">Welcome <span class="authName"></span></a>
-        </li>
         <li class="nav-item active">
           <a class="nav-link" href="#">Home
             <span class="sr-only">(current)</span>
@@ -107,7 +105,6 @@
           controller: 'MainController',
           resolve: {
             init: function(){
-
               if(firebase.auth().currentUser){
                 window.location.href = "/#!/home";
               }
@@ -133,6 +130,14 @@
         .when('/course/:Course_ID', {
           templateUrl: 'course-main.htm',
           controller: 'SSController'
+        })
+        .when('/course/:Course_ID/new_post', {
+          templateUrl: 'new-post.htm',
+          controller: 'NewPostController'
+        })
+        .when('/course/:Course_ID/new_notification', {
+          templateUrl: 'new-notification.htm',
+          controller: 'NewNotifactionController'
         })
         .when('/signout', {
           templateUrl: 'main.htm',
@@ -164,6 +169,7 @@
       });
       //console.log($routeParams);
       $("#course").text($routeParams.Course_ID);
+      $("#title").text($routeParams.Course_ID);
       getCoursePostList($routeParams);
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
