@@ -188,44 +188,10 @@
       changePostDisplay($routeParams);
     })
     .controller('NewPostController', function($scope, $route, $routeParams, $location){
-      $("#post_submit").on('click', function(){
-        let title = $("#post_title").val();
-        let content = $("#post_content").val();
-
-        if(title.length > 4 && content.length > 0){
-          let postRef = firebase.database().ref("/Post/"+$routeParams.Course_ID);
-          let key = postRef.push().key;
-          console.log(key);
-          postRef.child(key).set({
-            Title: title,
-            Post_content: content,
-            User_ID: firebase.auth().currentUser.uid,
-            Timestamp: firebase.database.ServerValue.TIMESTAMP
-          });
-          window.location.href = "/#!/course/" + $routeParams.Course_ID + "/post/" + key;
-        }
-      });
-
-
+      createPost($routeParams);
     })
     .controller('NewNotificationController', function($scope, $route, $routeParams, $location){
-      $("#timepicker").pickatime();
-      $("#datepicker").pickadate();
-      $("#note_submit").on('click', function(){
-        let time = $("#timepicker").pickatime('picker').get('select').pick;
-        let date = + $("#datepicker").pickadate('picker').get('select').pick;
-        let timeStamp = time + date;
-        let message = $("#message").val();
-        if(time > 0 && date > 0 && message.length > 5){
-          console.log("pushed");
-          firebase.database().ref("/Notification/" + $routeParams.Course_ID).push().set({
-            Text: message,
-            Timestamp: timeStamp,
-            User_ID: firebase.auth().currentUser.uid
-          });
-          window.location.href = "/#!/course/" + $routeParams.Course_ID;
-        }
-      });
+      createNotification($routeParams);
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
       firebase.auth().onAuthStateChanged(function(user){
@@ -235,6 +201,16 @@
       });
       getCourse();
     });
+  app.controller('myApp', ['$scope', function ($scope) {
+    function initScope() {
+      window.refresh();
+    }
+
+    initScope();
+
+    $scope.$on('$routeChangeUpdate', initScope);
+    $scope.$on('$routeChangeSuccess', initScope);
+  }]);
 </script>
 </body>
 </html>

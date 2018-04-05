@@ -6,29 +6,24 @@ function SStest() {
   })
 }
 
-function createPost() {
-  let post_title = $("#post_title").val();
-  let post_content = $("#post_content").val();
-  let post_ref = firebase.database().ref("Post");
+function createPost($routeParams) {
+  $("#post_submit").on('click', function(){
+    let title = $("#post_title").val();
+    let content = $("#post_content").val();
 
-  post_ref.once("value").then(function(snapshot){
-    let post_count = snapshot.val().Post_count;
-
-    post_count++;
-    post_ref.update({
-      Post_count: post_count
-    });
+    if(title.length > 4 && content.length > 0){
+      let postRef = firebase.database().ref("/Post/"+$routeParams.Course_ID);
+      let key = postRef.push().key;
+      console.log(key);
+      postRef.child(key).set({
+        Title: title,
+        Post_content: content,
+        User_ID: firebase.auth().currentUser.uid,
+        Timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+      window.location.href = "/#!/course/" + $routeParams.Course_ID + "/post/" + key;
+    }
   });
-
-  post_ref.push().set({
-    Title: post_title,
-    Post_content: post_content,
-    Timestamp: firebase.database.ServerValue.TIMESTAMP,
-    User_ID: firebase.auth().currentUser.uid
-  });
-
-  $("#p1").text(post_content);
-  console.log(post_content);
 }
 
 function getCoursePostList(routeParams) {
@@ -69,5 +64,25 @@ function getCourseNotifcationList(routeParams) {
       });
 
     })
+  });
+}
+
+function createNotification($routeParams){
+  $("#timepicker").pickatime();
+  $("#datepicker").pickadate();
+  $("#note_submit").on('click', function(){
+    let time = $("#timepicker").pickatime('picker').get('select').pick;
+    let date = + $("#datepicker").pickadate('picker').get('select').pick;
+    let timeStamp = time + date;
+    let message = $("#message").val();
+    if(time > 0 && date > 0 && message.length > 5){
+      console.log("pushed");
+      firebase.database().ref("/Notification/" + $routeParams.Course_ID).push().set({
+        Text: message,
+        Timestamp: timeStamp,
+        User_ID: firebase.auth().currentUser.uid
+      });
+      window.location.href = "/#!/course/" + $routeParams.Course_ID;
+    }
   });
 }

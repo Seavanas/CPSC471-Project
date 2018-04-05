@@ -20,7 +20,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function displayUserData(user){
-  console.log(user);
   $(".authed").css("display","unset");
   $(".authName").text(user.fullName);
 }
@@ -125,7 +124,6 @@ function changePostDisplay(routeParams){
       // Load SubComments Of Comment
       firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
         firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
-          console.log(snap2.val().Timestamp);
           $("#" + snap.key).append("<li class='list-group-item'>"
             + "<h6>" + user.val().fullName +  "<span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span></h6>"
             + snap2.val().Text
