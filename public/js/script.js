@@ -75,7 +75,7 @@ function toggleSignUp() {
     if(user) {
       console.log("hit");
       if(!firstName.length<1 && !lastName.length<1) {
-        firebase.database().ref("users/" + user.uid).update({
+        firebase.database().ref("Users/" + user.uid).update({
           userType: "student",
           email: email,
           uid: firebase.auth().currentUser.uid,
