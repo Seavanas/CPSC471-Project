@@ -172,9 +172,6 @@
       });
     })
     .controller('SSController', function($scope, $route, $routeParams, $location) {
-      $('#post_submit').on('click' ,function(){
-        createPost();
-      });
       //console.log($routeParams);
       $(".course").text($routeParams.Course_ID);
       $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
@@ -191,7 +188,25 @@
       changePostDisplay($routeParams);
     })
     .controller('NewPostController', function($scope, $route, $routeParams, $location){
-      $()
+      $("#post_submit").on('click', function(){
+        let title = $("#post_title").val();
+        let content = $("#post_content").val();
+
+        if(title.length > 4 && content.length > 0){
+          let postRef = firebase.database().ref("/Post/"+$routeParams.Course_ID);
+          let key = postRef.push().key;
+          console.log(key);
+          postRef.child(key).set({
+            Title: title,
+            Post_content: content,
+            User_ID: firebase.auth().currentUser.uid,
+            Timestamp: firebase.database.ServerValue.TIMESTAMP
+          });
+          window.location.href = "/#!/course/" + $routeParams.Course_ID + "/post/" + key;
+        }
+      });
+
+
     })
     .controller('NewNotificationController', function($scope, $route, $routeParams, $location){
       $("#timepicker").pickatime();
