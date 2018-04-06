@@ -19,7 +19,7 @@ function createPost($routeParams) {
 }
 
 function getAnonCoursePostList(routeParams) {
-  let post_ref = firebase.database().ref("Post/" + routeParams.Course_ID);
+  let post_ref = firebase.database().ref("Anonymous/" + routeParams.Course_ID);
   let post_list = [];
 
   post_ref.once("value", function(snapshot){
@@ -27,7 +27,7 @@ function getAnonCoursePostList(routeParams) {
       let Post_ID = childSnapshot.key;
       let post_title = childSnapshot.val().Title;
       firebase.database().ref("Users/" + childSnapshot.val().User_ID).once('value').then(snap => {
-        $("#post_list").append("<a href='/#!/course/" + routeParams.Course_ID +"/post/"+ Post_ID + "' class='list-group-item'>"
+        $("#anon-post_list").append("<a href='/#!/course/" + routeParams.Course_ID +"/Anonymous/"+ Post_ID + "' class='list-group-item'>"
           + "<h4>" + post_title + "</h4>"
           + "<i class='far fa-user'></i> <span> Anonymous </span>&nbsp;"
           + "<i class='far fa-clock'></i> <span>" + new moment(childSnapshot.val().Timestamp).fromNow() +"</span>"
