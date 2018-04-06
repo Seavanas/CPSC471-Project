@@ -115,19 +115,22 @@ function changePostDisplay(routeParams){
 
   // Load Comments
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
+    let comment = "<li class='list-group-item'>"
+      + "<h6 class='" + snap.val().User_ID + "'><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span></h6>"
+      + snap.val().Text
+      + "<ul id='" + snap.key + "' class='list-group'></ul>"
+      + "</li>";
+    $("#commentList").append(comment);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
-      $("#commentList").append("<li class='list-group-item'>"
-        + "<h6>" + user.val().fullName + "<span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span></h6>"
-        + snap.val().Text
-        + "<ul id='" + snap.key + "' class='list-group'></ul>"
-        + "</li>");
+      $("." + snap.val().User_ID).text(user.val().fullName);
       // Load SubComments Of Comment
       firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
         firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
-          $("#" + snap.key).append("<li class='list-group-item'>"
+          let subcomment = "<li class='list-group-item'>"
             + "<h6>" + user.val().fullName +  "<span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span></h6>"
             + snap2.val().Text
-            + "</li>");
+            + "</li>"
+          $("#" + snap.key).append(subcomment);
         });
       });
     });

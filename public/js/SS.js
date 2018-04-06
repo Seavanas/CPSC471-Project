@@ -47,7 +47,7 @@ function createPostComment(routeParams) {
         Timestamp: firebase.database.ServerValue.TIMESTAMP,
         User_ID: firebase.auth().currentUser.uid
       });
-
+      $('#post_comment_content').val("");
       postRef.child("temp").remove();
     });
   });
