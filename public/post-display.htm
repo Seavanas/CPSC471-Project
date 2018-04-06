@@ -25,8 +25,13 @@
     </div>
   </div>
   <div class="container rounded border" style="min-height: 200px;">
-    <pre id="content">Post_Content</pre>
+    <textarea rows="12" readonly style="resize: none; width: 100%; border: none" id="content">Post_Content</textarea>
   </div>
+  <style type="text/css">
+    textarea:focus{
+      outline-width: 0;
+    }
+  </style>
   <div class="container top-buffer" style="min-height: 200px;">
     <h3>Comment_Section</h3>
     <div>
