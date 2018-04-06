@@ -132,7 +132,7 @@
           templateUrl: 'new-post.htm',
           controller: 'SSController'
         })
-		.when('/anon-new-post', {
+		    .when('/anon-new-post', {
           templateUrl: 'anon-new-post.htm',
           controller: 'SSController'
         })
@@ -140,7 +140,11 @@
           templateUrl: 'post-display.htm',
           controller: 'PostController'
         })
-		.when('/course/:Course_ID/post/:AnonPost_ID', {
+        .when('/course/:Course_ID/Anonymous', {
+          templateUrl: 'course-anon.htm',
+          controller: 'AnonSSController'
+        })
+        .when('/course/:Course_ID/Anonymous/:AnonPost_ID', {
           templateUrl: 'post-display.htm',
           controller: 'AnonPostController'
         })
@@ -152,9 +156,9 @@
           templateUrl: 'new-post.htm',
           controller: 'NewPostController'
         })
-		.when('/course/:Course_ID/new_anonpost', {
+		    .when('/course/:Course_ID/new_anonpost', {
           templateUrl: 'anon-new-post.htm',
-		  controller: 'NewAnonPostController'
+		      controller: 'NewAnonPostController'
         })
         .when('/course/:Course_ID/new_notification', {
           templateUrl: 'new-notification.htm',
@@ -188,11 +192,18 @@
       //console.log($routeParams);
       $(".course").text($routeParams.Course_ID);
       $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
+      $("#anonHref").attr("href","/#!/course/" + $routeParams.Course_ID + "/Anonymous");
       $("#newPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
-	  $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_anonpost");
+	    $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_anonpost");
       getCoursePostList($routeParams);
       getCourseNotifcationList($routeParams);
-	  getAnonCoursePostList($routeParams);
+    })
+    .controller('AnonSSController', function($scope, $route, $routeParams, $location) {
+      //console.log($routeParams);
+      $(".course").text($routeParams.Course_ID);
+      $("#mainHref").attr("href","/#!/course/" + $routeParams.Course_ID);
+      $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_anonpost");
+      getAnonCoursePostList($routeParams);
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
       $('#signInSubmit').on('click' ,function(){
@@ -203,13 +214,13 @@
       changePostDisplay($routeParams);
       createPostComment($routeParams);
     })
-	.controller('AnonPostController', function($scope, $route, $routeParams, $location){
+	  .controller('AnonPostController', function($scope, $route, $routeParams, $location){
       changeAnonPostDisplay($routeParams);
     })
     .controller('NewPostController', function($scope, $route, $routeParams, $location){
       createPost($routeParams);
     })
-	.controller('NewAnonPostController', function($scope, $route, $routeParams, $location){
+	  .controller('NewAnonPostController', function($scope, $route, $routeParams, $location){
       createAnonPost($routeParams);
     })
     .controller('NewNotificationController', function($scope, $route, $routeParams, $location){
@@ -225,7 +236,7 @@
     });
   app.controller('myApp', ['$scope', function ($scope) {
     function initScope() {
-      window.refresh();
+      window.scrollTo(0,0);
     }
     initScope();
 

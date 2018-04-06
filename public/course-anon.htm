@@ -1,0 +1,46 @@
+<div class="container" style="min-height: 80vh">
+  <div class="row">
+    <div class="col">
+      <nav class="top-buffer" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/#!/home/">Home</a></li>
+          <li class="breadcrumb-item active course" aria-current="page"></li>
+          <li class="breadcrumb-item active" aria-current="page">Anonymous</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h1><span class="course"></span></h1>
+    </div>
+  </div>
+  <hr>
+  <div class="btn-group btn-group-toggle w-25"  data-toggle="buttons">
+    <label class="btn btn-secondary  w-50">
+      <a href="#" id="mainHref" style="color: white" type="radio" name="options" id="option1" autocomplete="off" checked> Main</a>
+    </label>
+    <label class="btn btn-secondary w-50 active">
+      <span style="color: white" type="radio" name="options" id="option3" autocomplete="off"> Anonymous</span>
+    </label>
+  </div>
+  <div class="row top-buffer">
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <h2>Anonymous Posts </h2>
+        </div>
+        <div class="col">
+          <div class="text-right">
+            <a id="newAnonPost" href="#" class="btn btn-outline-primary">+ Create Anonymous Post</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col" style="padding: 10px">
+          <ul id="anon-post_list" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

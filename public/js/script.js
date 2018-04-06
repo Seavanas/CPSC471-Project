@@ -123,7 +123,6 @@ function changePostDisplay(routeParams){
     $("#commentList").prepend(comment);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
       $("." + snap.val().User_ID).text(user.val().fullName);
-
       // Load SubComments Of Comment
       firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
         let subcomment = "<li class='list-group-item'>"
