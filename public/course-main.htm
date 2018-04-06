@@ -14,24 +14,21 @@
       <h1><span class="course"></span></h1>
     </div>
     <div class="col">
-      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-secondary active">
-          <input type="radio" id="normal_mode"> Normal
-        </label>
-        <label class="btn btn-secondary">
-          <input type="radio" id="anon_mode"> Anonymous
-        </label>
-      </div>
-    </div>
-    <div class="col">
       <div class="text-right">
         <a href="#" class="btn btn-outline-danger">Edit Course</a>
       </div>
     </div>
   </div>
   <hr>
-
-  <div class="row">
+  <div class="btn-group btn-group-toggle w-25"  data-toggle="buttons">
+    <label class="btn btn-secondary active w-50">
+      <span style="color: white" type="radio" name="options" id="option1" autocomplete="off" checked> Main</span>
+    </label>
+    <label class="btn btn-secondary w-50">
+      <a id="anonHref" href="#" style="color: white" type="radio" name="options" id="option3" autocomplete="off"> Anonymous</a>
+    </label>
+  </div>
+  <div class="row top-buffer">
     <div class="col-sm-7">
       <div class="row">
         <div class="col">
@@ -49,7 +46,6 @@
         </div>
       </div>
     </div>
-
     <div class="col-sm-5">
       <div class="row">
         <div class="col">
@@ -68,24 +64,4 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-7">
-      <div class="row">
-        <div class="col">
-          <h2>Anonymous Posts </h2>
-        </div>
-        <div class="col">
-          <div class="text-right">
-            <a id="newAnonPost" href="#" class="btn btn-outline-primary">+ Create Anonymous Post</a>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col" style="padding: 10px">
-          <ul id="anon-post_list" class="list-group"></ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
