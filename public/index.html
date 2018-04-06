@@ -102,6 +102,7 @@
 <script src="js/script.js"></script>
 <script src="js/SS.js"></script>
 <script src="js/CourseSS.js"></script>
+<script src="js/SSanonymous.js"></script>
 
 <script>
   var app = angular.module("myApp", ["ngRoute"]);
@@ -131,6 +132,10 @@
           templateUrl: 'new-post.htm',
           controller: 'SSController'
         })
+		.when('/anon-new-post', {
+          templateUrl: 'anon-new-post.htm',
+          controller: 'AnonController'
+        })
         .when('/course/:Course_ID/post/:Post_ID', {
           templateUrl: 'post-display.htm',
           controller: 'PostController'
@@ -142,6 +147,9 @@
         .when('/course/:Course_ID/new_post', {
           templateUrl: 'new-post.htm',
           controller: 'NewPostController'
+        })
+		.when('/course/:Course_ID/new_anonpost', {
+          templateUrl: 'anon-new-post.htm',
         })
         .when('/course/:Course_ID/new_notification', {
           templateUrl: 'new-notification.htm',
@@ -176,8 +184,15 @@
       $(".course").text($routeParams.Course_ID);
       $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
       $("#newPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
+	  $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
       getCoursePostList($routeParams);
       getCourseNotifcationList($routeParams);
+	  getAnonCoursePostList($routeParams);
+    })
+	.controller('AnonController', function($scope, $route, $routeParams, $location){
+      $('#anon-post_submit').on('click' ,function(){
+        createAnonPost();
+      });
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
       $('#signInSubmit').on('click' ,function(){
