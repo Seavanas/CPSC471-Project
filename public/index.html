@@ -134,11 +134,15 @@
         })
 		.when('/anon-new-post', {
           templateUrl: 'anon-new-post.htm',
-          controller: 'AnonController'
+          controller: 'SSController'
         })
         .when('/course/:Course_ID/post/:Post_ID', {
           templateUrl: 'post-display.htm',
           controller: 'PostController'
+        })
+		.when('/course/:Course_ID/post/:AnonPost_ID', {
+          templateUrl: 'post-display.htm',
+          controller: 'AnonPostController'
         })
         .when('/course/:Course_ID', {
           templateUrl: 'course-main.htm',
@@ -150,6 +154,7 @@
         })
 		.when('/course/:Course_ID/new_anonpost', {
           templateUrl: 'anon-new-post.htm',
+		  controller: 'NewAnonPostController'
         })
         .when('/course/:Course_ID/new_notification', {
           templateUrl: 'new-notification.htm',
@@ -184,15 +189,10 @@
       $(".course").text($routeParams.Course_ID);
       $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
       $("#newPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
-	  $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
+	  $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_anonpost");
       getCoursePostList($routeParams);
       getCourseNotifcationList($routeParams);
 	  getAnonCoursePostList($routeParams);
-    })
-	.controller('AnonController', function($scope, $route, $routeParams, $location){
-      $('#anon-post_submit').on('click' ,function(){
-        createAnonPost();
-      });
     })
     .controller('registerController', function($scope, $route, $routeParams, $location) {
       $('#signInSubmit').on('click' ,function(){
@@ -203,8 +203,14 @@
       changePostDisplay($routeParams);
       createPostComment($routeParams);
     })
+	.controller('AnonPostController', function($scope, $route, $routeParams, $location){
+      changeAnonPostDisplay($routeParams);
+    })
     .controller('NewPostController', function($scope, $route, $routeParams, $location){
       createPost($routeParams);
+    })
+	.controller('NewAnonPostController', function($scope, $route, $routeParams, $location){
+      createAnonPost($routeParams);
     })
     .controller('NewNotificationController', function($scope, $route, $routeParams, $location){
       createNotification($routeParams);
