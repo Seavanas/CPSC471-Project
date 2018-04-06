@@ -1,4 +1,4 @@
-function createPost($routeParams) {
+function createAnonPost($routeParams) {
   $("#anon-post_submit").on('click', function(){
     let title = $("#post_title").val();
     let content = $("#post_content").val();
@@ -36,5 +36,40 @@ function getAnonCoursePostList(routeParams) {
       });
 
     })
+  });
+}
+
+function changeAnonPostDisplay(routeParams){
+  $("#course").text(routeParams.Course_ID);
+  $("#course").attr('href', "/#!/course/" + routeParams.Course_ID);
+
+  firebase.database().ref("Anonymous/" + routeParams.Course_ID+ "/" + routeParams.Post_ID).once('value').then(snap => {
+    $("#post").text(snap.val().Title);
+    $("#title").text(snap.val().Title);
+    $("#content").text(snap.val().Post_content);
+    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
+      $("#author").text("Anonymous");
+    });
+    $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
+  });
+
+  // Load Comments
+  firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
+    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
+      $("#commentList").append("<li class='list-group-item'>"
+        + "<h6>" + user.val().fullName + "<span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span></h6>"
+        + snap.val().Text
+        + "<ul id='" + snap.key + "' class='list-group'></ul>"
+        + "</li>");
+      // Load SubComments Of Comment
+      firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
+        firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
+          $("#" + snap.key).append("<li class='list-group-item'>"
+            + "<h6>" + user.val().fullName +  "<span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span></h6>"
+            + snap2.val().Text
+            + "</li>");
+        });
+      });
+    });
   });
 }
