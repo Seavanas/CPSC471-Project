@@ -1,34 +1,31 @@
-<div class="container" style="padding: 10px; min-height: 80vh">
-  <div class="container rounded border">
-    <div class="row">
-      <div class="col">
-        <h4>Create A Post</h4>
-      </div>
+<div style="min-height: 80vh;">
+  <div class="container rounded border top-buffer" style=" margin-bottom: 48px;">
+    <div class="container">
+      <h2>Create a post</h2>
     </div>
-    <div class="row">
-      <div class="col-md-2">
-        <h6>Title</h6>
-      </div>
-      <div class="col-sm-10">
-        <input id="post_title" class="rounded w-100" type="text" />
-      </div>
+    <div class="top-buffer" style="min-height: 50px;">
+      <input id="post_title" placeholder="Title" class="rounded w-100" type="text" />
     </div>
-    <div class="row top-buffer">
-      <div class="col-md-2">
-        <h6>Post Message</h6>
-      </div>
-      <div class="col-md-10">
-        <div class="form-group">
-          <textarea id="post_content" class="form-control" rows="5"></textarea>
-        </div>
-      </div>
+    <div class="container rounded top-buffer border" style="min-height: 200px;">
+      <textarea id="post_content" placeholder="Write Something." rows="12" style="resize: none; width: 100%; border: none" id="content"></textarea>
     </div>
+    <style type="text/css">
+      #post_title{
+        font-size: 1.5em;
+        font-weight: bold;
+        padding-left: 0.8em;
+      }
+      textarea:focus{
+        outline-width: 0;
+      }
+    </style>
     <div class="row">
-      <div class="col">
+      <div class="col top-buffer">
         <div class="text-right" style="padding-bottom: 10px;">
-          <button id="post_submit" class="btn btn-primary" type="submit">Create</button>
+          <button id="post_submit" class="btn btn-primary" type="submit">Create Post</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
