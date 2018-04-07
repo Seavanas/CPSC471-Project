@@ -108,7 +108,27 @@ function cancelSubCommentSection(post_comment_ID) {
 }
 
 function createSubComment(post_comment_ID) {
+  let subCommentRef = firebase.database().ref("/SubComment/");
+  subCommentRef.once("value", function(snapshot) {
+    if (!snapshot.hasChild(post_comment_ID))
+    {
+      console.log("no");
+      subCommentRef.child(post_comment_ID).set({
+        temp: 0
+      });
+    }
 
+    let postCommentRef = subCommentRef.child(post_comment_ID);
+    let key = postCommentRef.push().key;
+    let content = $('#sub_comment_content_'+post_comment_ID).val();
+    postCommentRef.child(key).set({
+      Text: content,
+      Timestamp: firebase.database.ServerValue.TIMESTAMP,
+      User_ID: firebase.auth().currentUser.uid
+    });
+    $('#sub_comment_content_'+post_comment_ID).val("");
+    postCommentRef.child("temp").remove();
+  });
 }
 
 
