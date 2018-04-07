@@ -136,10 +136,19 @@ function loadSubComment (snap) {
     $("." + snap.val().User_ID).text(user.val().fullName);
     // Load SubComments Of Comment
     firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
+      let edit_link = "</h6>";
+      if (firebase.auth().currentUser.uid == snap2.val().User_ID)
+        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\")'>Edit</a></h6>";
+
+      let comment_text = snap2.val().Text;
+      if (firebase.auth().currentUser.uid == snap2.val().User_ID)
+        comment_text = "<div id='comment_text_"+snap2.key+"'>"+snap2.val().Text+"</div>";
+
       let subcomment = "<li class='list-group-item'>"
         + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span>"
-        +" <a href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap2.key+"\")'>reply to this</a></h6>"
-        + snap2.val().Text
+        +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap2.key+"\")'>Reply</a>"
+        + edit_link
+        + comment_text
         + "<ul id='" + snap2.key + "' class='list-group'></ul>"
         + "</li>"
         + "<div id='sub_"+snap2.key+"' style='padding-top: 10px; display: none;'>"
@@ -158,6 +167,27 @@ function loadSubComment (snap) {
   });
 }
 
+let comment_text= "";   //Set as global because can't pass multi line string as a parameter using JavaScript
+function displayEditCommentSection(edit_comment_ID) {
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  comment_text = $(div_ID).text();
+  console.log(comment_text);
+  let edit_comment_section = "<div style='padding-bottom: 10px;'>"
+  + "<textarea id='edit_comment_content_"+edit_comment_ID+"' class='form-control' rows='2'>"+comment_text+"</textarea></div>"
+  + "<p><button type='button' class='btn btn-primary btn-sm' onClick='editComment(\""+edit_comment_ID+"\")'>Edit</button> "
+  + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelEditCommentSection(\""+edit_comment_ID+"\")'>Cancel</button></p>";
+  $(div_ID).html(edit_comment_section);
+}
+
+function cancelEditCommentSection(edit_comment_ID) {
+  console.log(comment_text);
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  $(div_ID).text(comment_text);
+}
+
+function editComment(edit_comment_ID) {
+
+}
 
 function changePostDisplay(routeParams){
   $("#course").text(routeParams.Course_ID);
@@ -169,23 +199,27 @@ function changePostDisplay(routeParams){
     $("#content").text(snap.val().Post_content);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
       $("#author").text(snap.val().fullName);
-      console.log(firebase.auth().currentUser.uid);
-      console.log(snap.val().uid);
       if (firebase.auth().currentUser.uid == snap.val().uid)
-      {
-        console.log("yes");
         $("#title_row").append("<div class='col'><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-danger'>Edit Post</a></div></div>");
-      }
     });
     $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
   });
 
   // Load Comments
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
+    let edit_link = "</h6>";
+    if (firebase.auth().currentUser.uid == snap.val().User_ID)
+      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\")'>Edit</a></h6>";
+
+    let comment_text = snap.val().Text;
+    if (firebase.auth().currentUser.uid == snap.val().User_ID)
+      comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
+
     let comment = "<li class='list-group-item'>"
       + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
-      +" <a href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap.key+"\")'>reply to this</a></h6>"
-      + snap.val().Text
+      +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap.key+"\")'>Reply</a>"
+      + edit_link
+      + comment_text
       + "<ul id='" + snap.key + "' class='list-group'></ul>"
       + "</li>"
       + "<div id='sub_"+snap.key+"' style='padding-top: 10px; display: none;'>"
