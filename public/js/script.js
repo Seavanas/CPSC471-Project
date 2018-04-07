@@ -169,6 +169,13 @@ function changePostDisplay(routeParams){
     $("#content").text(snap.val().Post_content);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
       $("#author").text(snap.val().fullName);
+      console.log(firebase.auth().currentUser.uid);
+      console.log(snap.val().uid);
+      if (firebase.auth().currentUser.uid == snap.val().uid)
+      {
+        console.log("yes");
+        $("#title_row").append("<div class='col'><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-danger'>Edit Post</a></div></div>");
+      }
     });
     $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
   });
