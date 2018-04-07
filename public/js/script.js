@@ -99,6 +99,20 @@ function toggleSignUp() {
   }
 }
 
+function displaySubCommentSection(post_comment_ID) {
+  $('#sub_'+post_comment_ID).css('display', 'block');
+}
+
+function cancelSubCommentSection(post_comment_ID) {
+  $('#sub_'+post_comment_ID).css('display', 'none');
+}
+
+function createSubComment(post_comment_ID) {
+
+}
+
+
+
 function changePostDisplay(routeParams){
   $("#course").text(routeParams.Course_ID);
   $("#course").attr('href', "/#!/course/" + routeParams.Course_ID);
@@ -117,15 +131,15 @@ function changePostDisplay(routeParams){
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
     let comment = "<li class='list-group-item'>"
       + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
-      +" <a id='reply_link' href='javascript:void(0)' style='color: black' onClick=''>reply to this</a></h6>"
+      +" <a id='reply_link' href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap.key+"\")'>reply to this</a></h6>"
       + snap.val().Text
       + "<ul id='" + snap.key + "' class='list-group'></ul>"
       + "</li>"
-      + "<div style='padding-top: 10px; display: block;'>"
+      + "<div id='sub_"+snap.key+"' style='padding-top: 10px; display: none;'>"
       + "<p>Insert reply below:</p>"
-      + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content' class='form-control' rows='2'></textarea></div>"
-      + "<p><button id='sub_comment_submit' type='button' class='btn btn-primary btn-sm'>Post Reply</button> "
-      + "<button id='sub_comment_cancel' type='button' class='btn btn-basic btn-sm'>Cancel</button></p>"
+      + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
+      + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
+      + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></p>"
       + "</div>";
     $("#commentList").prepend(comment);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
