@@ -131,6 +131,32 @@ function createSubComment(post_comment_ID) {
   });
 }
 
+function loadSubComment (snap) {
+  firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
+    $("." + snap.val().User_ID).text(user.val().fullName);
+    // Load SubComments Of Comment
+    firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
+      let subcomment = "<li class='list-group-item'>"
+        + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span>"
+        +" <a href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap2.key+"\")'>reply to this</a></h6>"
+        + snap2.val().Text
+        + "<ul id='" + snap2.key + "' class='list-group'></ul>"
+        + "</li>"
+        + "<div id='sub_"+snap2.key+"' style='padding-top: 10px; display: none;'>"
+        + "<p>Insert reply below:</p>"
+        + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap2.key+"' class='form-control' rows='2'></textarea></div>"
+        + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap2.key+"\")'>Post Reply</button> "
+        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap2.key+"\")'>Cancel</button></p>"
+        + "</div>";
+      $("#" + snap.key).prepend(subcomment);
+      firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
+        $("." + snap2.val().User_ID).text(user.val().fullName);
+      });
+
+      loadSubComment(snap2);
+    });
+  });
+}
 
 
 function changePostDisplay(routeParams){
@@ -151,7 +177,7 @@ function changePostDisplay(routeParams){
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
     let comment = "<li class='list-group-item'>"
       + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
-      +" <a id='reply_link' href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap.key+"\")'>reply to this</a></h6>"
+      +" <a href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap.key+"\")'>reply to this</a></h6>"
       + snap.val().Text
       + "<ul id='" + snap.key + "' class='list-group'></ul>"
       + "</li>"
@@ -162,20 +188,7 @@ function changePostDisplay(routeParams){
       + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></p>"
       + "</div>";
     $("#commentList").prepend(comment);
-    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
-      $("." + snap.val().User_ID).text(user.val().fullName);
-      // Load SubComments Of Comment
-      firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
-        let subcomment = "<li class='list-group-item'>"
-          + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span></h6>"
-          + snap2.val().Text
-          + "</li>"
-        $("#" + snap.key).prepend(subcomment);
-        firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
-          $("." + snap2.val().User_ID).text(user.val().fullName);
-        });
-      });
-    });
+    loadSubComment(snap);
   });
 }
 
