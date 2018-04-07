@@ -131,6 +131,38 @@ function createSubComment(post_comment_ID) {
   });
 }
 
+function displayEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment) {
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  let original_comment_text = $(div_ID).text();
+  let edit_comment_section = "<div style='padding-bottom: 10px;'>"
+  + "<textarea id='edit_comment_content_"+edit_comment_ID+"' class='form-control' rows='2'>"+original_comment_text+"</textarea></div>"
+  + "<p><button type='button' class='btn btn-primary btn-sm' onClick='editComment(\""+edit_comment_ID+"\", \""+parent_ID+"\", "+bool_post_comment+")'>Edit</button> "
+  + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelEditCommentSection(\""+edit_comment_ID+"\")'>Cancel</button></p>";
+  $(div_ID).html(edit_comment_section);
+}
+
+function cancelEditCommentSection(edit_comment_ID) {
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  $(div_ID).text($("#edit_comment_content_"+edit_comment_ID).text());
+}
+
+function editComment(edit_comment_ID, parent_ID, bool_post_comment) {
+  let parent_ref_string = "";
+  if (bool_post_comment)
+    parent_ref_string = "Comment/" + parent_ID + "/";
+  else
+  parent_ref_string = "SubComment/" + parent_ID + "/";
+
+  let commentRef = firebase.database().ref(parent_ref_string + edit_comment_ID);
+  let edit_comment_content_id = "#edit_comment_content_"+edit_comment_ID;
+  let new_comment_content = $(edit_comment_content_id).val();
+  commentRef.set({
+    Text: new_comment_content,
+    Timestamp: firebase.database.ServerValue.TIMESTAMP,
+    User_ID: firebase.auth().currentUser.uid
+  });
+}
+
 function loadSubComment (snap) {
   firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
     $("." + snap.val().User_ID).text(user.val().fullName);
@@ -138,7 +170,7 @@ function loadSubComment (snap) {
     firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
       let edit_link = "</h6>";
       if (firebase.auth().currentUser.uid == snap2.val().User_ID)
-        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\")'>Edit</a></h6>";
+        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a></h6>";
 
       let comment_text = snap2.val().Text;
       if (firebase.auth().currentUser.uid == snap2.val().User_ID)
@@ -167,28 +199,6 @@ function loadSubComment (snap) {
   });
 }
 
-let comment_text= "";   //Set as global because can't pass multi line string as a parameter using JavaScript
-function displayEditCommentSection(edit_comment_ID) {
-  let div_ID = "#comment_text_"+edit_comment_ID;
-  comment_text = $(div_ID).text();
-  console.log(comment_text);
-  let edit_comment_section = "<div style='padding-bottom: 10px;'>"
-  + "<textarea id='edit_comment_content_"+edit_comment_ID+"' class='form-control' rows='2'>"+comment_text+"</textarea></div>"
-  + "<p><button type='button' class='btn btn-primary btn-sm' onClick='editComment(\""+edit_comment_ID+"\")'>Edit</button> "
-  + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelEditCommentSection(\""+edit_comment_ID+"\")'>Cancel</button></p>";
-  $(div_ID).html(edit_comment_section);
-}
-
-function cancelEditCommentSection(edit_comment_ID) {
-  console.log(comment_text);
-  let div_ID = "#comment_text_"+edit_comment_ID;
-  $(div_ID).text(comment_text);
-}
-
-function editComment(edit_comment_ID) {
-
-}
-
 function changePostDisplay(routeParams){
   $("#course").text(routeParams.Course_ID);
   $("#course").attr('href', "/#!/course/" + routeParams.Course_ID);
@@ -209,7 +219,7 @@ function changePostDisplay(routeParams){
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
     let edit_link = "</h6>";
     if (firebase.auth().currentUser.uid == snap.val().User_ID)
-      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\")'>Edit</a></h6>";
+      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a></h6>";
 
     let comment_text = snap.val().Text;
     if (firebase.auth().currentUser.uid == snap.val().User_ID)
