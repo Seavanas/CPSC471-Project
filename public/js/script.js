@@ -116,10 +116,17 @@ function changePostDisplay(routeParams){
   // Load Comments
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
     let comment = "<li class='list-group-item'>"
-      + "<h6 ><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span></h6>"
+      + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
+      +" <a id='reply_link' href='javascript:void(0)' style='color: black' onClick=''>reply to this</a></h6>"
       + snap.val().Text
       + "<ul id='" + snap.key + "' class='list-group'></ul>"
-      + "</li>";
+      + "</li>"
+      + "<div style='padding-top: 10px; display: block;'>"
+      + "<p>Insert reply below:</p>"
+      + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content' class='form-control' rows='2'></textarea></div>"
+      + "<p><button id='sub_comment_submit' type='button' class='btn btn-primary btn-sm'>Post Reply</button> "
+      + "<button id='sub_comment_cancel' type='button' class='btn btn-basic btn-sm'>Cancel</button></p>"
+      + "</div>";
     $("#commentList").prepend(comment);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
       $("." + snap.val().User_ID).text(user.val().fullName);
