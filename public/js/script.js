@@ -126,15 +126,21 @@ function createSubComment(post_comment_ID) {
 function displayEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment) {
   let div_ID = "#comment_text_"+edit_comment_ID;
   let original_comment_text = $(div_ID).text();
+  $("#edit_link_"+edit_comment_ID).attr('onclick', '');
+  $(div_ID).attr('class', 'bg-dark text-white');
+  $(div_ID).css('padding', '10px');
   let edit_comment_section = "<div style='padding-bottom: 10px;'>"
   + "<textarea id='edit_comment_content_"+edit_comment_ID+"' class='form-control' rows='2'>"+original_comment_text+"</textarea></div>"
-  + "<p><button type='button' class='btn btn-primary btn-sm' onClick='editComment(\""+edit_comment_ID+"\", \""+parent_ID+"\", "+bool_post_comment+")'>Edit</button> "
-  + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelEditCommentSection(\""+edit_comment_ID+"\")'>Cancel</button></p>";
+  + "<div><button type='button' class='btn btn-primary btn-sm' onClick='editComment(\""+edit_comment_ID+"\", \""+parent_ID+"\", "+bool_post_comment+")'>Edit</button> "
+  + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelEditCommentSection(\""+edit_comment_ID+"\", \""+parent_ID+"\", "+bool_post_comment+")'>Cancel</button></div>";
   $(div_ID).html(edit_comment_section);
 }
 
-function cancelEditCommentSection(edit_comment_ID) {
+function cancelEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment) {
   let div_ID = "#comment_text_"+edit_comment_ID;
+  $("#edit_link_"+edit_comment_ID).attr('onclick', 'displayEditCommentSection("'+edit_comment_ID+'", "'+parent_ID+'", "'+bool_post_comment+'")');
+  $(div_ID).attr('class', '');
+  $(div_ID).css('padding', '');
   $(div_ID).text($("#edit_comment_content_"+edit_comment_ID).text());
 }
 
@@ -186,7 +192,7 @@ function loadSubComment (snap) {
       let comment_text = snap2.val().Text;
       if (firebase.auth().currentUser.uid == snap2.val().User_ID)
       {
-        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a>";
+        edit_link = " <a id='edit_link_"+snap2.key+"' href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a>";
         delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap2.key+"\", \""+snap.key+"\", false)'>Delete</a>";
         comment_text = "<div id='comment_text_"+snap2.key+"'>"+snap2.val().Text+"</div>";
       }
@@ -249,7 +255,7 @@ function changePostDisplay(routeParams){
     let comment_text = snap.val().Text;
     if (firebase.auth().currentUser.uid == snap.val().User_ID)
     {
-      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a>";
+      edit_link = " <a id='edit_link_"+snap.key+"' href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a>";
       delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Delete</a>";
       comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
     }
