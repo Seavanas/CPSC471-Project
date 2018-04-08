@@ -233,7 +233,10 @@ function changePostDisplay(routeParams){
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
       $("#author").text(snap.val().fullName);
       if (firebase.auth().currentUser.uid == snap.val().uid)
-        $("#title_row").append("<div class='col'><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-danger'>Edit Post</a></div></div>");
+      {
+        $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning'>Edit Post</a>"
+                              + " <a href='javascript:void(0)' class='btn btn-outline-danger'>Delete Post</a></div></p>");
+      }
     });
     $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
   });
