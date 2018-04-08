@@ -145,6 +145,11 @@ function cancelEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment)
 }
 
 function editComment(edit_comment_ID, parent_ID, bool_post_comment) {
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  $("#edit_link_"+edit_comment_ID).attr('onclick', 'displayEditCommentSection("'+edit_comment_ID+'", "'+parent_ID+'", "'+bool_post_comment+'")');
+  $(div_ID).attr('class', '');
+  $(div_ID).css('padding', '');
+  
   let parent_ref_string = "";
   if (bool_post_comment)
     parent_ref_string = "Comment/" + parent_ID + "/";
