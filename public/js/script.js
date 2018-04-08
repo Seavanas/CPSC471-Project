@@ -187,7 +187,7 @@ function loadSubComment (snap) {
       if (firebase.auth().currentUser.uid == snap2.val().User_ID)
       {
         edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a>";
-        delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap2.key+"\", \""+snap.key+"\", false)'>Delete</a></h6>";
+        delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap2.key+"\", \""+snap.key+"\", false)'>Delete</a>";
         comment_text = "<div id='comment_text_"+snap2.key+"'>"+snap2.val().Text+"</div>";
       }
 
@@ -196,15 +196,16 @@ function loadSubComment (snap) {
         +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap2.key+"\")'>Reply</a>"
         + edit_link
         + delete_link
+        + "</h6>"
         + comment_text
-        + "<ul id='" + snap2.key + "' class='list-group'></ul>"
-        + "</li>"
-        + "<div id='sub_"+snap2.key+"' style='padding-top: 10px; display: none;'>"
+        + "<div id='sub_"+snap2.key+"' class='bg-dark text-white' style='padding: 10px; display: none;'>"
         + "<p>Insert reply below:</p>"
         + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap2.key+"' class='form-control' rows='2'></textarea></div>"
-        + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap2.key+"\")'>Post Reply</button> "
-        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap2.key+"\")'>Cancel</button></p>"
-        + "</div>";
+        + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap2.key+"\")'>Post Reply</button> "
+        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap2.key+"\")'>Cancel</button></div>"
+        + "</div>"
+        + "<ul id='" + snap2.key + "' class='list-group'></ul>"
+        + "</li>";
       $("#" + snap.key).prepend(subcomment);
       firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
         $("." + snap2.val().User_ID).text(user2.val().fullName);
@@ -249,7 +250,7 @@ function changePostDisplay(routeParams){
     if (firebase.auth().currentUser.uid == snap.val().User_ID)
     {
       edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a>";
-      delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Delete</a></h6>";
+      delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Delete</a>";
       comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
     }
 
@@ -258,15 +259,16 @@ function changePostDisplay(routeParams){
       +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap.key+"\")'>Reply</a>"
       + edit_link
       + delete_link
+      + "</h6>"
       + comment_text
-      + "<ul id='" + snap.key + "' class='list-group'></ul>"
-      + "</li>"
-      + "<div id='sub_"+snap.key+"' style='padding-top: 10px; display: none;'>"
+      + "<div id='sub_"+snap.key+"' class='bg-dark text-white' style='padding: 10px; display: none;'>"
       + "<p>Insert reply below:</p>"
-      + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
-      + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
-      + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></p>"
-      + "</div>";
+      + "<div style='padding-bottom: 10px'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
+      + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
+      + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></div>"
+      + "</div>"
+      + "<ul id='" + snap.key + "' class='list-group'></ul>"
+      + "</li>";
     $("#commentList").prepend(comment);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
       $("." + snap.val().User_ID).text(user.val().fullName);
