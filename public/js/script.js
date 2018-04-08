@@ -196,6 +196,10 @@ function loadSubComment (snap) {
 
       loadSubComment(snap2);
     });
+
+    firebase.database().ref("SubComment/" + snap.key).on('child_changed', snap2 => {
+      $("#comment_text_"+snap2.key).text(snap2.val().Text);
+    });
   });
 }
 
@@ -240,6 +244,11 @@ function changePostDisplay(routeParams){
       + "</div>";
     $("#commentList").prepend(comment);
     loadSubComment(snap);
+  });
+
+  //On changed is somehow called twice per edit, use consol.log() and things will be printed twice
+  firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_changed', snap => {
+    $("#comment_text_"+snap.key).text(snap.val().Text);
   });
 }
 
