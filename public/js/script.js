@@ -20,7 +20,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function displayUserData(user){
-  console.log(user);
   $(".authed").css("display","unset");
   $(".authName").text(user.fullName);
 }
@@ -69,8 +68,13 @@ function toggleSignUp() {
   let email = $("#email").val();
   let password = $("#password").val();
   firebase.auth().onAuthStateChanged(function(user) {
+    let firstName = $("#firstName").val();
+    let lastName = $("#lastName").val();
+    let email = $("#email").val();
+    let password = $("#password").val();
     if(user) {
-      if(firstName.length>1 && lastName.length>1) {
+      console.log("hit");
+      if(!firstName.length<1 && !lastName.length<1) {
         firebase.database().ref("Users/" + user.uid).update({
           userType: "student",
           email: email,
@@ -84,13 +88,12 @@ function toggleSignUp() {
       }
     }
   });
-  if(firstName.length>1 && lastName.length>1 && validateEmail(email) && password.length>5){
+  if(!firstName.length<1 && !lastName.length<1 && validateEmail(email) && !password.length<8){
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       // Handle Errors here.
       let errorCode = error.code;
       let errorMessage = error.message;
       // ...
-      $("#userError").text(error);
       return null;
     });
   }
@@ -106,7 +109,15 @@ function cancelSubCommentSection(post_comment_ID) {
 
 function createSubComment(post_comment_ID) {
   let subCommentRef = firebase.database().ref("/SubComment/");
-  subCommentRef.once("value").then( function(snapshot) {
+  subCommentRef.once("value", function(snapshot) {
+    if (!snapshot.hasChild(post_comment_ID))
+    {
+      console.log("no");
+      subCommentRef.child(post_comment_ID).set({
+        temp: 0
+      });
+    }
+
     let postCommentRef = subCommentRef.child(post_comment_ID);
     let key = postCommentRef.push().key;
     let content = $('#sub_comment_content_'+post_comment_ID).val();
@@ -120,7 +131,77 @@ function createSubComment(post_comment_ID) {
   });
 }
 
+function displayEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment) {
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  let original_comment_text = $(div_ID).text();
+  let edit_comment_section = "<div style='padding-bottom: 10px;'>"
+  + "<textarea id='edit_comment_content_"+edit_comment_ID+"' class='form-control' rows='2'>"+original_comment_text+"</textarea></div>"
+  + "<p><button type='button' class='btn btn-primary btn-sm' onClick='editComment(\""+edit_comment_ID+"\", \""+parent_ID+"\", "+bool_post_comment+")'>Edit</button> "
+  + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelEditCommentSection(\""+edit_comment_ID+"\")'>Cancel</button></p>";
+  $(div_ID).html(edit_comment_section);
+}
 
+function cancelEditCommentSection(edit_comment_ID) {
+  let div_ID = "#comment_text_"+edit_comment_ID;
+  $(div_ID).text($("#edit_comment_content_"+edit_comment_ID).text());
+}
+
+function editComment(edit_comment_ID, parent_ID, bool_post_comment) {
+  let parent_ref_string = "";
+  if (bool_post_comment)
+    parent_ref_string = "Comment/" + parent_ID + "/";
+  else
+  parent_ref_string = "SubComment/" + parent_ID + "/";
+
+  let commentRef = firebase.database().ref(parent_ref_string + edit_comment_ID);
+  let edit_comment_content_id = "#edit_comment_content_"+edit_comment_ID;
+  let new_comment_content = $(edit_comment_content_id).val();
+  commentRef.set({
+    Text: new_comment_content,
+    Timestamp: firebase.database.ServerValue.TIMESTAMP,
+    User_ID: firebase.auth().currentUser.uid
+  });
+}
+
+function loadSubComment (snap) {
+  firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
+    $("." + snap.val().User_ID).text(user.val().fullName);
+    // Load SubComments Of Comment
+    firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
+      let edit_link = "</h6>";
+      if (firebase.auth().currentUser.uid == snap2.val().User_ID)
+        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a></h6>";
+
+      let comment_text = snap2.val().Text;
+      if (firebase.auth().currentUser.uid == snap2.val().User_ID)
+        comment_text = "<div id='comment_text_"+snap2.key+"'>"+snap2.val().Text+"</div>";
+
+      let subcomment = "<li class='list-group-item'>"
+        + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span>"
+        +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap2.key+"\")'>Reply</a>"
+        + edit_link
+        + comment_text
+        + "<ul id='" + snap2.key + "' class='list-group'></ul>"
+        + "</li>"
+        + "<div id='sub_"+snap2.key+"' style='padding-top: 10px; display: none;'>"
+        + "<p>Insert reply below:</p>"
+        + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap2.key+"' class='form-control' rows='2'></textarea></div>"
+        + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap2.key+"\")'>Post Reply</button> "
+        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap2.key+"\")'>Cancel</button></p>"
+        + "</div>";
+      $("#" + snap.key).prepend(subcomment);
+      firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
+        $("." + snap2.val().User_ID).text(user.val().fullName);
+      });
+
+      loadSubComment(snap2);
+    });
+
+    firebase.database().ref("SubComment/" + snap.key).on('child_changed', snap2 => {
+      $("#comment_text_"+snap2.key).text(snap2.val().Text);
+    });
+  });
+}
 
 function changePostDisplay(routeParams){
   $("#course").text(routeParams.Course_ID);
@@ -132,41 +213,42 @@ function changePostDisplay(routeParams){
     $("#content").text(snap.val().Post_content);
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
       $("#author").text(snap.val().fullName);
+      if (firebase.auth().currentUser.uid == snap.val().uid)
+        $("#title_row").append("<div class='col'><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-danger'>Edit Post</a></div></div>");
     });
     $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
   });
 
   // Load Comments
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
-    $("#commentList").prepend(
-      "<li class='list-group-item'>"
+    let edit_link = "</h6>";
+    if (firebase.auth().currentUser.uid == snap.val().User_ID)
+      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a></h6>";
+
+    let comment_text = snap.val().Text;
+    if (firebase.auth().currentUser.uid == snap.val().User_ID)
+      comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
+
+    let comment = "<li class='list-group-item'>"
       + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
-      +" <a id='reply_link' href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap.key+"\")'>reply to this</a></h6>"
-      + snap.val().Text
-      + "<div id='sub_"+snap.key+"' class='top-buffer' style='display: none;'>"
+      +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap.key+"\")'>Reply</a>"
+      + edit_link
+      + comment_text
+      + "<ul id='" + snap.key + "' class='list-group'></ul>"
+      + "</li>"
+      + "<div id='sub_"+snap.key+"' style='padding-top: 10px; display: none;'>"
       + "<p>Insert reply below:</p>"
       + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
       + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
       + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></p>"
-      + "</div>"
-      + "<ul id='" + snap.key + "' class='list-group'></ul>"
-      + "</li>"
-    );
-    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
-      $("." + snap.val().User_ID).text(user.val().fullName);
-      // Load SubComments Of Comment
-      firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
-        $("#" + snap.key).prepend(
-          "<li class='list-group-item'>"
-          + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span></h6>"
-          + snap2.val().Text
-          + "</li>"
-        );
-        firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
-          $("." + snap2.val().User_ID).text(user.val().fullName);
-        });
-      });
-    });
+      + "</div>";
+    $("#commentList").prepend(comment);
+    loadSubComment(snap);
+  });
+
+  //On changed is somehow called twice per edit, use consol.log() and things will be printed twice
+  firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_changed', snap => {
+    $("#comment_text_"+snap.key).text(snap.val().Text);
   });
 }
 
