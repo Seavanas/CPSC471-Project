@@ -110,13 +110,6 @@ function cancelSubCommentSection(post_comment_ID) {
 function createSubComment(post_comment_ID) {
   let subCommentRef = firebase.database().ref("/SubComment/");
   subCommentRef.once("value", function(snapshot) {
-    if (!snapshot.hasChild(post_comment_ID))
-    {
-      console.log("no");
-      subCommentRef.child(post_comment_ID).set({
-        temp: 0
-      });
-    }
 
     let postCommentRef = subCommentRef.child(post_comment_ID);
     let key = postCommentRef.push().key;
@@ -127,7 +120,6 @@ function createSubComment(post_comment_ID) {
       User_ID: firebase.auth().currentUser.uid
     });
     $('#sub_comment_content_'+post_comment_ID).val("");
-    postCommentRef.child("temp").remove();
   });
 }
 
@@ -163,23 +155,47 @@ function editComment(edit_comment_ID, parent_ID, bool_post_comment) {
   });
 }
 
+function deleteChildSubComment (delete_comment_ID) {
+  let rootRef = firebase.database().ref("SubComment/" + delete_comment_ID);
+  rootRef.once('value', snap => {
+       snap.forEach(child => {
+         deleteChildSubComment(child.key);
+       });
+  });
+  rootRef.remove();
+}
+
+function deleteComment (delete_comment_ID, parent_ID, bool_post_comment) {
+  let parent_ref_string = "";
+  if (bool_post_comment)
+    parent_ref_string = "Comment/" + parent_ID + "/";
+  else
+    parent_ref_string = "SubComment/" + parent_ID + "/";
+
+  let commentRef = firebase.database().ref(parent_ref_string + delete_comment_ID);
+  commentRef.remove();
+
+  deleteChildSubComment(delete_comment_ID);
+}
+
 function loadSubComment (snap) {
-  firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
-    $("." + snap.val().User_ID).text(user.val().fullName);
     // Load SubComments Of Comment
     firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
-      let edit_link = "</h6>";
-      if (firebase.auth().currentUser.uid == snap2.val().User_ID)
-        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a></h6>";
-
+      let edit_link = "";
+      let delete_link = "</h6>";
       let comment_text = snap2.val().Text;
       if (firebase.auth().currentUser.uid == snap2.val().User_ID)
+      {
+        edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a>";
+        delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap2.key+"\", \""+snap.key+"\", false)'>Delete</a></h6>";
         comment_text = "<div id='comment_text_"+snap2.key+"'>"+snap2.val().Text+"</div>";
+      }
 
-      let subcomment = "<li class='list-group-item'>"
+      let subcomment = "<li id='comment_block_"+snap2.key+"' class='list-group-item'>"
         + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span>"
         +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap2.key+"\")'>Reply</a>"
         + edit_link
+        + delete_link
         + comment_text
         + "<ul id='" + snap2.key + "' class='list-group'></ul>"
         + "</li>"
@@ -191,7 +207,7 @@ function loadSubComment (snap) {
         + "</div>";
       $("#" + snap.key).prepend(subcomment);
       firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
-        $("." + snap2.val().User_ID).text(user.val().fullName);
+        $("." + snap2.val().User_ID).text(user2.val().fullName);
       });
 
       loadSubComment(snap2);
@@ -200,7 +216,10 @@ function loadSubComment (snap) {
     firebase.database().ref("SubComment/" + snap.key).on('child_changed', snap2 => {
       $("#comment_text_"+snap2.key).text(snap2.val().Text);
     });
-  });
+
+    firebase.database().ref("SubComment/" + snap.key).on('child_removed', snap2 => {
+      $("#comment_block_"+snap2.key).remove();
+    });
 }
 
 function changePostDisplay(routeParams){
@@ -221,18 +240,21 @@ function changePostDisplay(routeParams){
 
   // Load Comments
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
-    let edit_link = "</h6>";
-    if (firebase.auth().currentUser.uid == snap.val().User_ID)
-      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a></h6>";
-
+    let edit_link = "";
+    let delete_link = "</h6>";
     let comment_text = snap.val().Text;
     if (firebase.auth().currentUser.uid == snap.val().User_ID)
+    {
+      edit_link = " <a href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a>";
+      delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Delete</a></h6>";
       comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
+    }
 
-    let comment = "<li class='list-group-item'>"
+    let comment = "<li id='comment_block_"+snap.key+"' class='list-group-item'>"
       + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
       +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap.key+"\")'>Reply</a>"
       + edit_link
+      + delete_link
       + comment_text
       + "<ul id='" + snap.key + "' class='list-group'></ul>"
       + "</li>"
@@ -243,12 +265,19 @@ function changePostDisplay(routeParams){
       + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></p>"
       + "</div>";
     $("#commentList").prepend(comment);
+    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
+      $("." + snap.val().User_ID).text(user.val().fullName);
+    });
     loadSubComment(snap);
   });
 
   //On changed is somehow called twice per edit, use consol.log() and things will be printed twice
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_changed', snap => {
     $("#comment_text_"+snap.key).text(snap.val().Text);
+  });
+
+  firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_removed', snap => {
+    $("#comment_block_"+snap.key).remove();
   });
 }
 

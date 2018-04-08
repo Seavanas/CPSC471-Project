@@ -31,13 +31,6 @@ function createPostComment(routeParams) {
     let commentRef = firebase.database().ref("/Comment/");
     commentRef.once("value", function(snapshot) {
       let Post_ID = routeParams.Post_ID;
-      if (!snapshot.hasChild(Post_ID))
-      {
-        console.log("no");
-        commentRef.child(Post_ID).set({
-          temp: 0
-        });
-      }
 
       let postRef = commentRef.child(Post_ID);
       let key = postRef.push().key;
@@ -48,7 +41,6 @@ function createPostComment(routeParams) {
         User_ID: firebase.auth().currentUser.uid
       });
       $('#post_comment_content').val("");
-      postRef.child("temp").remove();
     });
   });
 }
