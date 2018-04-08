@@ -99,28 +99,29 @@ function toggleSignUp() {
   }
 }
 
-function displaySubCommentSection(post_comment_ID) {
-  $('#sub_'+post_comment_ID).css('display', 'block');
+function displaySubCommentSection(comment_ID) {
+  $('#sub_'+comment_ID).css('display', 'block');
 }
 
-function cancelSubCommentSection(post_comment_ID) {
-  $('#sub_'+post_comment_ID).css('display', 'none');
+function cancelSubCommentSection(comment_ID) {
+  $('#sub_'+comment_ID).css('display', 'none');
 }
 
-function createSubComment(post_comment_ID) {
+function createSubComment(comment_ID) {
   let subCommentRef = firebase.database().ref("/SubComment/");
   subCommentRef.once("value", function(snapshot) {
 
-    let postCommentRef = subCommentRef.child(post_comment_ID);
-    let key = postCommentRef.push().key;
-    let content = $('#sub_comment_content_'+post_comment_ID).val();
-    postCommentRef.child(key).set({
+    let commentRef = subCommentRef.child(comment_ID);
+    let key = commentRef.push().key;
+    let content = $('#sub_comment_content_'+comment_ID).val();
+    commentRef.child(key).set({
       Text: content,
       Timestamp: firebase.database.ServerValue.TIMESTAMP,
       User_ID: firebase.auth().currentUser.uid
     });
-    $('#sub_comment_content_'+post_comment_ID).val("");
+    $('#sub_comment_content_'+comment_ID).val("");
   });
+  cancelSubCommentSection(comment_ID);
 }
 
 function displayEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment) {
@@ -149,7 +150,7 @@ function editComment(edit_comment_ID, parent_ID, bool_post_comment) {
   $("#edit_link_"+edit_comment_ID).attr('onclick', 'displayEditCommentSection("'+edit_comment_ID+'", "'+parent_ID+'", "'+bool_post_comment+'")');
   $(div_ID).attr('class', '');
   $(div_ID).css('padding', '');
-  
+
   let parent_ref_string = "";
   if (bool_post_comment)
     parent_ref_string = "Comment/" + parent_ID + "/";
