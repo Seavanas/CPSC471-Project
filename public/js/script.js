@@ -20,6 +20,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function displayUserData(user){
+  console.log(user);
   $(".authed").css("display","unset");
   $(".authName").text(user.fullName);
 }
@@ -68,13 +69,8 @@ function toggleSignUp() {
   let email = $("#email").val();
   let password = $("#password").val();
   firebase.auth().onAuthStateChanged(function(user) {
-    let firstName = $("#firstName").val();
-    let lastName = $("#lastName").val();
-    let email = $("#email").val();
-    let password = $("#password").val();
     if(user) {
-      console.log("hit");
-      if(!firstName.length<1 && !lastName.length<1) {
+      if(firstName.length>1 && lastName.length>1) {
         firebase.database().ref("Users/" + user.uid).update({
           userType: "student",
           email: email,
@@ -88,12 +84,13 @@ function toggleSignUp() {
       }
     }
   });
-  if(!firstName.length<1 && !lastName.length<1 && validateEmail(email) && !password.length<8){
+  if(firstName.length>1 && lastName.length>1 && validateEmail(email) && password.length>5){
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       // Handle Errors here.
       let errorCode = error.code;
       let errorMessage = error.message;
       // ...
+      $("#userError").text(error);
       return null;
     });
   }
@@ -109,15 +106,7 @@ function cancelSubCommentSection(post_comment_ID) {
 
 function createSubComment(post_comment_ID) {
   let subCommentRef = firebase.database().ref("/SubComment/");
-  subCommentRef.once("value", function(snapshot) {
-    if (!snapshot.hasChild(post_comment_ID))
-    {
-      console.log("no");
-      subCommentRef.child(post_comment_ID).set({
-        temp: 0
-      });
-    }
-
+  subCommentRef.once("value").then( function(snapshot) {
     let postCommentRef = subCommentRef.child(post_comment_ID);
     let key = postCommentRef.push().key;
     let content = $('#sub_comment_content_'+post_comment_ID).val();
@@ -149,28 +138,30 @@ function changePostDisplay(routeParams){
 
   // Load Comments
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
-    let comment = "<li class='list-group-item'>"
+    $("#commentList").prepend(
+      "<li class='list-group-item'>"
       + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
       +" <a id='reply_link' href='javascript:void(0)' style='color: black' onClick='displaySubCommentSection(\""+snap.key+"\")'>reply to this</a></h6>"
       + snap.val().Text
-      + "<ul id='" + snap.key + "' class='list-group'></ul>"
-      + "</li>"
-      + "<div id='sub_"+snap.key+"' style='padding-top: 10px; display: none;'>"
+      + "<div id='sub_"+snap.key+"' class='top-buffer' style='display: none;'>"
       + "<p>Insert reply below:</p>"
       + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
       + "<p><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
       + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></p>"
-      + "</div>";
-    $("#commentList").prepend(comment);
+      + "</div>"
+      + "<ul id='" + snap.key + "' class='list-group'></ul>"
+      + "</li>"
+    );
     firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
       $("." + snap.val().User_ID).text(user.val().fullName);
       // Load SubComments Of Comment
       firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
-        let subcomment = "<li class='list-group-item'>"
+        $("#" + snap.key).prepend(
+          "<li class='list-group-item'>"
           + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span></h6>"
           + snap2.val().Text
           + "</li>"
-        $("#" + snap.key).prepend(subcomment);
+        );
         firebase.database().ref("Users/" + snap2.val().User_ID).once('value').then(user2 => {
           $("." + snap2.val().User_ID).text(user.val().fullName);
         });
