@@ -215,7 +215,8 @@
       createPostComment($routeParams);
     })
 	  .controller('AnonPostController', function($scope, $route, $routeParams, $location){
-      changeAnonPostDisplay($routeParams);
+       changeAnonPostDisplay($routeParams);
+	   createAnonPostComment($routeParams);
     })
     .controller('NewPostController', function($scope, $route, $routeParams, $location){
       createPost($routeParams);
