@@ -248,7 +248,7 @@ function changePostDisplay(routeParams){
       if (firebase.auth().currentUser.uid == snap.val().uid)
       {
         $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning'>Edit Post</a>"
-                              + " <a href='javascript:void(0)' class='btn btn-outline-danger'>Delete Post</a></div></p>");
+                              + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deletePost(\""+routeParams.Course_ID+"\", \""+routeParams.Post_ID+"\")'>Delete Post</a></div></p>");
       }
     });
     $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
@@ -296,6 +296,20 @@ function changePostDisplay(routeParams){
   firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_removed', snap => {
     $("#comment_block_"+snap.key).remove();
   });
+}
+
+function deletePost (course_ID, parent_ID) {
+  	let parent_ref_string = "Post/" + course_ID + "/" + parent_ID;
+	window.alert(parent_ref_string);
+	let postRef = firebase.database().ref(parent_ref_string);
+	let commentRef = firebase.database().ref("Comment/" + parent_ID + "/");
+	commentRef.once('value', snap => {
+       snap.forEach(child => {
+         deleteComment (child.key, parent_ID, true);
+       });
+    });
+	postRef.remove();
+	window.history.back();
 }
 
 function toggleSignOut(){

@@ -52,7 +52,7 @@ function changeAnonPostDisplay(routeParams){
       if (firebase.auth().currentUser.uid == snap.val().uid)
       {
         $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning'>Edit Post</a>"
-                              + " <a href='javascript:void(0)' class='btn btn-outline-danger'>Delete Post</a></div></p>");
+                              + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deleteAnonPost(\""+routeParams.Course_ID+"\", \""+routeParams.AnonPost_ID+"\")'>Delete Post</a></div></p>");
       }
     });
     $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
@@ -168,6 +168,19 @@ function deleteAnonChildSubComment (delete_comment_ID) {
        });
   });
   rootRef.remove();
+}
+
+function deleteAnonPost (course_ID, parent_ID) {
+  	let parent_ref_string = "Anonymous/" + course_ID + "/" + parent_ID;
+	let postRef = firebase.database().ref(parent_ref_string);
+	let commentRef = firebase.database().ref("AnonComment/" + parent_ID + "/");
+	commentRef.once('value', snap => {
+       snap.forEach(child => {
+         deleteAnonComment (child.key, parent_ID, true);
+       });
+    });
+	postRef.remove();
+	window.history.back();
 }
 
 function displayAnonEditCommentSection(edit_comment_ID, parent_ID, bool_post_comment) {
