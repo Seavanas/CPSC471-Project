@@ -26,3 +26,26 @@ function createCourse() {
     }
   });
 }
+
+
+
+
+function editPost(routeParams){
+  console.log(routeParams);
+  let postRef = firebase.database().ref("/Post/"+routeParams.Course_ID+"/"+routeParams.Post_ID);
+  postRef.once("value").then(function(snapshot) {
+    $("#post_title").val(snapshot.val().Title);
+    $("#post_content").val(snapshot.val().Post_content);
+  });
+
+  $('#edit_post').on('click', function() {
+    postRef.set({
+      Post_content: $("#post_content").val(),
+      Timestamp: firebase.database.ServerValue.TIMESTAMP,
+      Title: $("#post_title").val(),
+      User_ID: firebase.auth().currentUser.uid
+    });
+    console.log(routeParams);
+    window.location.href = "/#!/course/"+routeParams.Course_ID+"/post/"+routeParams.Post_ID;
+  })
+}

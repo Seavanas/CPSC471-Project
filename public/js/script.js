@@ -252,7 +252,7 @@ function changePostDisplay(routeParams){
       $("#author").text(snap.val().fullName);
       if (firebase.auth().currentUser.uid == snap.val().uid)
       {
-        $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning'>Edit Post</a>"
+        $("#title_row").append("<p><div class='text-right'><a href='/#!/course/"+routeParams.Course_ID+"/edit/"+routeParams.Post_ID+"'class='btn btn-outline-warning'>Edit Post</a>"
                               + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deletePost(\""+routeParams.Course_ID+"\", \""+routeParams.Post_ID+"\")'>Delete Post</a></div></p>");
       }
     });
