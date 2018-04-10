@@ -205,7 +205,12 @@
       });
     })
     .controller('SSController', function($scope, $route, $routeParams, $location) {
-      //console.log($routeParams);
+      $scope.$on("$routeChangeSuccess", function(event, next, current) {
+        if(window.postLoaded){
+            location.reload();
+        }
+      });
+      window.postLoaded = true;
       $(".course").text($routeParams.Course_ID);
       $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
       $("#anonHref").attr("href","/#!/course/" + $routeParams.Course_ID + "/Anonymous");
