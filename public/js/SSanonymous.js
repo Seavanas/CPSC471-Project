@@ -164,7 +164,7 @@ function deleteAnonChildSubComment (delete_comment_ID) {
   let rootRef = firebase.database().ref("AnonSubComment/" + delete_comment_ID);
   rootRef.once('value', snap => {
        snap.forEach(child => {
-         deleteChildSubComment(child.key);
+         deleteAnonChildSubComment(child.key);
        });
   });
   rootRef.remove();
