@@ -236,6 +236,11 @@ function loadSubComment (snap) {
 }
 
 function changePostDisplay(routeParams){
+    if(window.postListener){
+        location.reload();
+    }
+
+    window.postListener = true;
   $("#course").text(routeParams.Course_ID);
   $("#course").attr('href', "/#!/course/" + routeParams.Course_ID);
 
