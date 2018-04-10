@@ -110,6 +110,7 @@
 <script src="js/SS.js"></script>
 <script src="js/CourseSS.js"></script>
 <script src="js/SSanonymous.js"></script>
+<script src="js/GScript.js"></script>
 
 <script>
   var app = angular.module("myApp", ["ngRoute"]);
@@ -175,6 +176,10 @@
           templateUrl: 'anon-edit-post.htm',
           controller: 'EditAnonPostController'
         })
+        .when('/create-course', {
+          templateUrl: 'create-course.htm',
+          controller: 'CreateCourseController'
+        })
         .when('/signout', {
           templateUrl: 'main.htm',
           resolve: {
@@ -237,6 +242,9 @@
     })
     .controller('NewNotificationController', function($scope, $route, $routeParams, $location){
       createNotification($routeParams);
+    })
+    .controller('CreateCourseController', function($scope, $route, $routeParams, $location){
+      createCourse();
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
       firebase.auth().onAuthStateChanged(function(user){
