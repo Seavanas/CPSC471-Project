@@ -155,7 +155,7 @@ function editComment(edit_comment_ID, parent_ID, bool_post_comment) {
   if (bool_post_comment)
     parent_ref_string = "Comment/" + parent_ID + "/";
   else
-  parent_ref_string = "SubComment/" + parent_ID + "/";
+    parent_ref_string = "SubComment/" + parent_ID + "/";
 
   let commentRef = firebase.database().ref(parent_ref_string + edit_comment_ID);
   let edit_comment_content_id = "#edit_comment_content_"+edit_comment_ID;

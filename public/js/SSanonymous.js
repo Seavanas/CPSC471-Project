@@ -51,7 +51,7 @@ function changeAnonPostDisplay(routeParams){
       $("#author").text("Anonymous");
       if (firebase.auth().currentUser.uid == snap.val().uid)
       {
-        $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning'>Edit Post</a>"
+        $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning' onClick='window.location.href=\"/#!/course/"+routeParams.Course_ID+"/edit_anonpost/"+routeParams.AnonPost_ID+"\"'>Edit Post</a>"
                               + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deleteAnonPost(\""+routeParams.Course_ID+"\", \""+routeParams.AnonPost_ID+"\")'>Delete Post</a></div></p>");
       }
     });

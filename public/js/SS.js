@@ -105,3 +105,22 @@ function createNotification($routeParams){
     }
   });
 }
+
+function editAnonPost (routeParams) {
+  let postRef = firebase.database().ref("/Anonymous/"+routeParams.Course_ID+"/"+routeParams.AnonPost_ID);
+  postRef.once("value").then(function(snapshot) {
+    $("#anon_post_title").val(snapshot.val().Title);
+    $("#anon_post_content").val(snapshot.val().Post_content);
+  });
+
+  $('#anon_edit_post_submit').on('click', function($routeParams) {
+    postRef.set({
+      Post_content: $("#anon_post_content").val(),
+      Timestamp: firebase.database.ServerValue.TIMESTAMP,
+      Title: $("#anon_post_title").val(),
+      User_ID: firebase.auth().currentUser.uid
+    });
+
+    window.location.href = "/#!/course/"+routeParams.Course_ID+"/Anonymous/"+routeParams.AnonPost_ID;
+  })
+}

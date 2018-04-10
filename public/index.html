@@ -171,6 +171,10 @@
           templateUrl: 'new-notification.htm',
           controller: 'NewNotificationController'
         })
+        .when('/course/:Course_ID/edit_anonpost/:AnonPost_ID', {
+          templateUrl: 'anon-edit-post.htm',
+          controller: 'EditAnonPostController'
+        })
         .when('/signout', {
           templateUrl: 'main.htm',
           resolve: {
@@ -241,6 +245,9 @@
         }
       });
       getCourse();
+    })
+    .controller('EditAnonPostController', function($scope, $route, $routeParams, $location) {
+      editAnonPost($routeParams);
     });
   app.controller('myApp', ['$scope', function ($scope) {
     function initScope() {
