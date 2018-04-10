@@ -1,19 +1,34 @@
 <div class="container rounded border top-buffer" style=" margin-bottom: 48px; width: 50vw;">
+  <div id="userError" class="alert alert-danger" style="visibility: hidden" role="alert">
+    It is dangerous to go alone. Take this!
+  </div>
   <table>
     <tr>
-      <td valign="top" style="font-size:20px;"><strong>Enter course name:</strong></td>
+      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter course code:</strong></td>
       <td valign="top" style="min-width: 40vw;">
-          <textarea id="course_name" rows="1" style="resize: none; width: 75%;"></textarea>
+          <textarea id="course_code" rows="1" style="resize: none; width: 75%;"></textarea>
       </td>
     </tr>
     <tr>
-      <td valign="top" style="font-size:20px;"><strong>Enter semester:</strong></td>
+      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter course number:</strong></td>
+      <td valign="top" style="min-width: 40vw;">
+          <textarea id="course_number" rows="1" style="resize: none; width: 75%;"></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter course description:</strong></td>
+      <td valign="top" style="min-width: 40vw;">
+          <textarea id="course_description" rows="1" style="resize: none; width: 75%;"></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter semester:</strong></td>
       <td valign="top" style="min-width: 40vw;">
           <textarea id="course_semester" rows="1" style="resize: none; width: 30%;"></textarea>
       </td>
     </tr>
     <tr>
-      <td valign="top" style="font-size:20px;"><strong>Enter year:</strong></td>
+      <td valign="top" style="font-size:20px;  min-width: 15vw;"><strong>Enter year:</strong></td>
       <td valign="top" style="min-width: 40vw;">
           <textarea id="course_year" rows="1" style="resize: none; width: 10%;"></textarea>
       </td>
