@@ -1,40 +1,37 @@
-<div class="container rounded border top-buffer" style=" margin-bottom: 48px; width: 50vw;">
-  <div id="userError" class="alert alert-danger" style="visibility: hidden" role="alert">
-    It is dangerous to go alone. Take this!
+<div class="container rounded border top-buffer" style=" margin-bottom: 48px; width: 50vw; min-height: 80vh;">
+  <div class="container top-buffer">
+    <div class="row justify-content-md-center" style="margin-bottom: 20px;"><h1>Create a course</h1></div>
+    <div class="row">
+      <div class="col-4"><p>Enter course code:</p></div>
+      <div class="col">
+          <textarea class="w-100" id="course_code" placeholder="eg. CPSC" rows="1" style="resize: none; width: 75%;"></textarea>
+      </div>
+      <div class="w-100"></div>
+      <div class="col-4"><p>Enter course number:</p></div>
+      <div class="col">
+          <textarea class="w-100" id="course_number" placeholder="eg. 313" rows="1" style="resize: none; width: 75%;"></textarea>
+      </div>
+      <div class="w-100"></div>
+      <div class="col-4"><p>Enter course description:</p></div>
+      <div class="col">
+          <textarea class="w-100" id="course_description" placeholder="eg. Programming Paradigms" rows="1" style="resize: none; width: 75%;"></textarea>
+      </div>
+      <div class="w-100"></div>
+      <div class="col-4"><p>Enter course semester:</p></div>
+      <div class="col">
+          <textarea class="w-100" id="course_semester" placeholder="eg. Winter" rows="1" style="resize: none; width: 75%;"></textarea>
+      </div>
+      <div class="w-100"></div>
+      <div class="col-4"><p>Enter course year:</p></div>
+      <div class="col">
+          <textarea class="w-100" id="course_year" placeholder="eg. 2017" rows="1" style="resize: none; width: 75%;"></textarea>
+      </div>
+      <div class="w-100"></div>
+      <div class="col">
+        <button class="btn-primary btn w-100" id="submit_course" type="submit">Create Course</button>
+    </div>
+    <div id="userError" class="alert alert-danger" style="visibility: hidden" role="alert">
+      It is dangerous to go alone. Take this!
+    </div>
   </div>
-  <table>
-    <tr>
-      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter course code:</strong></td>
-      <td valign="top" style="min-width: 40vw;">
-          <textarea id="course_code" rows="1" style="resize: none; width: 75%;"></textarea>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter course number:</strong></td>
-      <td valign="top" style="min-width: 40vw;">
-          <textarea id="course_number" rows="1" style="resize: none; width: 75%;"></textarea>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter course description:</strong></td>
-      <td valign="top" style="min-width: 40vw;">
-          <textarea id="course_description" rows="1" style="resize: none; width: 75%;"></textarea>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top" style="font-size:20px; min-width: 15vw;"><strong>Enter semester:</strong></td>
-      <td valign="top" style="min-width: 40vw;">
-          <textarea id="course_semester" rows="1" style="resize: none; width: 30%;"></textarea>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top" style="font-size:20px;  min-width: 15vw;"><strong>Enter year:</strong></td>
-      <td valign="top" style="min-width: 40vw;">
-          <textarea id="course_year" rows="1" style="resize: none; width: 10%;"></textarea>
-      </td>
-    </tr>
-    <tr>
-          <td valign="top"><button id="submit_course" type="submit">Create Course</button></td>
-    <tr>
-  </table>
 </div>
