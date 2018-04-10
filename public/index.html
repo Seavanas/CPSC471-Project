@@ -132,6 +132,10 @@
           templateUrl: 'home.htm',
           controller: 'CourseController'
         })
+        .when('/home/new_course', {
+            templateUrl: 'create-course.htm',
+            controller: 'CreateCourseController'
+        })
         .when('/register', {
           templateUrl: 'register.htm',
           controller: 'registerController'
@@ -205,12 +209,7 @@
       });
     })
     .controller('SSController', function($scope, $route, $routeParams, $location) {
-      $scope.$on("$routeChangeSuccess", function(event, next, current) {
-        if(window.postLoaded){
-            location.reload();
-        }
-      });
-      window.postLoaded = true;
+
       $(".course").text($routeParams.Course_ID);
       $("#newNotification").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_notification");
       $("#anonHref").attr("href","/#!/course/" + $routeParams.Course_ID + "/Anonymous");
@@ -234,6 +233,7 @@
     .controller('PostController', function($scope, $route, $routeParams, $location){
       changePostDisplay($routeParams);
       createPostComment($routeParams);
+
     })
 	  .controller('AnonPostController', function($scope, $route, $routeParams, $location){
        changeAnonPostDisplay($routeParams);
