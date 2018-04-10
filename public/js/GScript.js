@@ -15,9 +15,9 @@ function createCourse() {
           $("#userError").text(errorMessage);
         }
         else{
-          storageLocation.child(code+"_"+number).set({
+          storageLocation.set({
             Admin: firebase.auth().currentUser.uid,
-            Name: (code+" "+number+": "+ description),
+            Name: (code+" "+number+" "+ description),
             Semester: semester,
             Year: year
           });
