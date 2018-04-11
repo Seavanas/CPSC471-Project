@@ -184,6 +184,10 @@
           templateUrl: 'create-course.htm',
           controller: 'CreateCourseController'
         })
+        .when('/course/:Course_ID/edit/:Post_ID', {
+          templateUrl: 'edit-post.htm',
+          controller: 'EditPostController'
+        })
         .when('/signout', {
           templateUrl: 'main.htm',
           resolve: {
@@ -250,6 +254,10 @@
     })
     .controller('CreateCourseController', function($scope, $route, $routeParams, $location){
       createCourse();
+    })
+    .controller('EditPostController', function($scope, $route, $routeParams, $location) {
+      console.log($routeParams);
+      editPost($routeParams);
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
       firebase.auth().onAuthStateChanged(function(user){

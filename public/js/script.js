@@ -252,11 +252,11 @@ function changePostDisplay(routeParams){
       $("#author").text(snap.val().fullName);
       if (firebase.auth().currentUser.uid == snap.val().uid)
       {
-        $("#title_row").append("<p><div class='text-right'><a href='javascript:void(0)' class='btn btn-outline-warning'>Edit Post</a>"
+        $("#title_row").append("<p><div class='text-right'><a href='/#!/course/"+routeParams.Course_ID+"/edit/"+routeParams.Post_ID+"'class='btn btn-outline-warning'>Edit Post</a>"
                               + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deletePost(\""+routeParams.Course_ID+"\", \""+routeParams.Post_ID+"\")'>Delete Post</a></div></p>");
       }
     });
-    $("#time_created").text(new moment(snap.val().Timestamp).fromNow());
+    $("#time_created").text(new moment(snap.val().Timestamp).format('MMMM Do YYYY, h:mm a'));
   });
 
   // Load Comments
@@ -278,7 +278,7 @@ function changePostDisplay(routeParams){
       + delete_link
       + "</h6>"
       + comment_text
-      + "<div id='sub_"+snap.key+"' class='bg-dark text-white' style='padding: 10px; display: none;'>"
+      + "<div id='sub_"+snap.key+"' class='border rounded text-white' style='padding: 10px; display: none;'>"
       + "<p>Insert reply below:</p>"
       + "<div style='padding-bottom: 10px'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
       + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
