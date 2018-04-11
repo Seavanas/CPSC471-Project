@@ -59,7 +59,6 @@
   <div class="container">
     <a style="size:24px;" class="navbar-brand" href="#">Lectur<span style="color:orange">it</span></a>
     <span></span>
-
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -219,11 +218,13 @@
       $("#anonHref").attr("href","/#!/course/" + $routeParams.Course_ID + "/Anonymous");
       $("#newPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_post");
 	    $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_anonpost");
+      firebase.database().ref("Courses/"+$routeParams.Course_ID).once('value').then(snap => {
+        if(snap.val().Admin === firebase.auth().currentUser.uid) $(".admin").css("display","unset");
+      });
       getCoursePostList($routeParams);
       getCourseNotifcationList($routeParams);
     })
     .controller('AnonSSController', function($scope, $route, $routeParams, $location) {
-      //console.log($routeParams);
       $(".course").text($routeParams.Course_ID);
       $("#mainHref").attr("href","/#!/course/" + $routeParams.Course_ID);
       $("#newAnonPost").attr("href","/#!/course/" + $routeParams.Course_ID + "/new_anonpost");
@@ -261,9 +262,10 @@
     })
     .controller('CourseController', function($scope, $route, $routeParams, $location) {
       firebase.auth().onAuthStateChanged(function(user){
-        if(!user){
-          window.location.href = "/#!/";
-        }
+        if(!user)window.location.href = "/#!/";
+        firebase.database().ref("Users/"+firebase.auth().currentUser.uid).once('value').then( snap => {
+          if(snap.val().userType === "teacher")$("#createCourse").css("display", "unset");
+        });
       });
       getCourse();
     })

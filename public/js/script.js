@@ -190,31 +190,33 @@ function deleteComment (delete_comment_ID, parent_ID, bool_post_comment) {
   deleteChildSubComment(delete_comment_ID);
 }
 
-function loadSubComment (snap) {
+function loadSubComment (snap, routeParams) {
     // Load SubComments Of Comment
+  firebase.database().ref("Courses/" + routeParams.Course_ID).once('value').then( snap3 => {
     firebase.database().ref("SubComment/" + snap.key).on('child_added', snap2 => {
       let edit_link = "";
       let delete_link = "</h6>";
       let comment_text = snap2.val().Text;
-      if (firebase.auth().currentUser.uid == snap2.val().User_ID)
-      {
-        edit_link = " <a id='edit_link_"+snap2.key+"' href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap2.key+"\", \""+snap.key+"\", false)'>Edit</a>";
-        delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap2.key+"\", \""+snap.key+"\", false)'>Delete</a>";
-        comment_text = "<div id='comment_text_"+snap2.key+"'>"+snap2.val().Text+"</div>";
+      if (firebase.auth().currentUser.uid == snap2.val().User_ID) {
+        edit_link = " <a id='edit_link_" + snap2.key + "' href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\"" + snap2.key + "\", \"" + snap.key + "\", false)'>Edit</a>";
+        comment_text = "<div id='comment_text_" + snap2.key + "'>" + snap2.val().Text + "</div>";
+      }
+      if (firebase.auth().currentUser.uid == snap2.val().User_ID || firebase.auth().currentUser.uid == snap3.val().Admin){
+        delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\"" + snap2.key + "\", \"" + snap.key + "\", false)'>Delete</a>";
       }
 
-      let subcomment = "<li id='comment_block_"+snap2.key+"' class='list-group-item'>"
+      let subcomment = "<li id='comment_block_" + snap2.key + "' class='list-group-item'>"
         + "<h6><span class='" + snap2.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap2.val().Timestamp).fromNow() + "</span>"
-        +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap2.key+"\")'>Reply</a>"
+        + " <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\"" + snap2.key + "\")'>Reply</a>"
         + edit_link
         + delete_link
         + "</h6>"
         + comment_text
-        + "<div id='sub_"+snap2.key+"' class='bg-dark text-white' style='padding: 10px; display: none;'>"
+        + "<div id='sub_" + snap2.key + "' class='bg-dark text-white' style='padding: 10px; display: none;'>"
         + "<p>Insert reply below:</p>"
-        + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_"+snap2.key+"' class='form-control' rows='2'></textarea></div>"
-        + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap2.key+"\")'>Post Reply</button> "
-        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap2.key+"\")'>Cancel</button></div>"
+        + "<div style='padding-bottom: 10px;'><textarea id='sub_comment_content_" + snap2.key + "' class='form-control' rows='2'></textarea></div>"
+        + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\"" + snap2.key + "\")'>Post Reply</button> "
+        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\"" + snap2.key + "\")'>Cancel</button></div>"
         + "</div>"
         + "<ul id='" + snap2.key + "' class='list-group'></ul>"
         + "</li>";
@@ -223,8 +225,9 @@ function loadSubComment (snap) {
         $("." + snap2.val().User_ID).text(user2.val().fullName);
       });
 
-      loadSubComment(snap2);
+      loadSubComment(snap2, routeParams);
     });
+  });
 
     firebase.database().ref("SubComment/" + snap.key).on('child_changed', snap2 => {
       $("#comment_text_"+snap2.key).text(snap2.val().Text);
@@ -243,54 +246,57 @@ function changePostDisplay(routeParams){
     window.postListener = true;
   $("#course").text(routeParams.Course_ID);
   $("#course").attr('href', "/#!/course/" + routeParams.Course_ID);
-
-  firebase.database().ref("Post/" + routeParams.Course_ID+ "/" + routeParams.Post_ID).once('value').then(snap => {
-    $("#post").text(snap.val().Title);
-    $("#title").text(snap.val().Title);
-    $("#content").text(snap.val().Post_content);
-    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
-      $("#author").text(snap.val().fullName);
-      if (firebase.auth().currentUser.uid == snap.val().uid)
-      {
-        $("#title_row").append("<p><div class='text-right'><a href='/#!/course/"+routeParams.Course_ID+"/edit/"+routeParams.Post_ID+"'class='btn btn-outline-warning'>Edit Post</a>"
-                              + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deletePost(\""+routeParams.Course_ID+"\", \""+routeParams.Post_ID+"\")'>Delete Post</a></div></p>");
-      }
+  firebase.database().ref("Courses/" + routeParams.Course_ID).once('value').then(snap0 => {
+    firebase.database().ref("Post/" + routeParams.Course_ID+ "/" + routeParams.Post_ID).once('value').then(snap => {
+      $("#post").text(snap.val().Title);
+      $("#title").text(snap.val().Title);
+      $("#content").text(snap.val().Post_content);
+      firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(snap => {
+        $("#author").text(snap.val().fullName);
+        if (firebase.auth().currentUser.uid == snap.val().uid || firebase.auth().currentUser.uid == snap0.val().Admin) {
+          $("#title_row").append("<p><div class='text-right'><a href='/#!/course/"+routeParams.Course_ID+"/edit/"+routeParams.Post_ID+"'class='btn btn-outline-warning'>Edit Post</a>"
+            + " <a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deletePost(\""+routeParams.Course_ID+"\", \""+routeParams.Post_ID+"\")'>Delete Post</a></div></p>");
+        }
+      });
+      $("#time_created").text(new moment(snap.val().Timestamp).format('MMMM Do YYYY, h:mm a'));
     });
-    $("#time_created").text(new moment(snap.val().Timestamp).format('MMMM Do YYYY, h:mm a'));
   });
 
   // Load Comments
-  firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
-    let edit_link = "";
-    let delete_link = "</h6>";
-    let comment_text = snap.val().Text;
-    if (firebase.auth().currentUser.uid == snap.val().User_ID)
-    {
-      edit_link = " <a id='edit_link_"+snap.key+"' href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a>";
-      delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Delete</a>";
-      comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
-    }
+  firebase.database().ref("Courses/"+routeParams.Course_ID).once("value").then(snapshot0 => {
+    firebase.database().ref("Comment/" + routeParams.Post_ID).on('child_added', snap => {
+      let edit_link = "";
+      let delete_link = "</h6>";
+      let comment_text = snap.val().Text;
+      if (firebase.auth().currentUser.uid == snap.val().User_ID) {
+        edit_link = " <a id='edit_link_"+snap.key+"' href='javascript:void(0)' style='color: red' onClick='displayEditCommentSection(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Edit</a>";
+        comment_text = "<div id='comment_text_"+snap.key+"'>"+snap.val().Text+"</div>";
+      }
+      if (firebase.auth().currentUser.uid == snap.val().User_ID || firebase.auth().currentUser.uid == snapshot0.val().Admin) {
+        delete_link = " <a href='javascript:void(0)' style='color: red' onClick='deleteComment(\""+snap.key+"\", \""+routeParams.Post_ID+"\", true)'>Delete</a>";
+      }
 
-    let comment = "<li id='comment_block_"+snap.key+"' class='list-group-item'>"
-      + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
-      +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap.key+"\")'>Reply</a>"
-      + edit_link
-      + delete_link
-      + "</h6>"
-      + comment_text
-      + "<div id='sub_"+snap.key+"' class='border rounded text-white' style='padding: 10px; display: none;'>"
-      + "<p>Insert reply below:</p>"
-      + "<div style='padding-bottom: 10px'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
-      + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
-      + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></div>"
-      + "</div>"
-      + "<ul id='" + snap.key + "' class='list-group'></ul>"
-      + "</li>";
-    $("#commentList").prepend(comment);
-    firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
-      $("." + snap.val().User_ID).text(user.val().fullName);
+      let comment = "<li id='comment_block_"+snap.key+"' class='list-group-item'>"
+        + "<h6><span class='" + snap.val().User_ID + "'></span><span style='color: grey'>:- " + new moment(snap.val().Timestamp).fromNow() + "</span>"
+        +" <a href='javascript:void(0)' style='color: red' onClick='displaySubCommentSection(\""+snap.key+"\")'>Reply</a>"
+        + edit_link
+        + delete_link
+        + "</h6>"
+        + comment_text
+        + "<div id='sub_"+snap.key+"' class='border rounded text-white' style='padding: 10px; display: none;'>"
+        + "<p>Insert reply below:</p>"
+        + "<div style='padding-bottom: 10px'><textarea id='sub_comment_content_"+snap.key+"' class='form-control' rows='2'></textarea></div>"
+        + "<div><button type='button' class='btn btn-primary btn-sm' onClick='createSubComment(\""+snap.key+"\")'>Post Reply</button> "
+        + "<button type='button' class='btn btn-basic btn-sm' onClick='cancelSubCommentSection(\""+snap.key+"\")'>Cancel</button></div>"
+        + "</div>"
+        + "<ul id='" + snap.key + "' class='list-group'></ul>"
+        + "</li>";
+      $("#commentList").prepend(comment);
+      firebase.database().ref("Users/" + snap.val().User_ID).once('value').then(user => {
+        $("." + snap.val().User_ID).text(user.val().fullName);
+      });
+      loadSubComment(snap, routeParams);
     });
-    loadSubComment(snap);
   });
 
   //On changed is somehow called twice per edit, use consol.log() and things will be printed twice
