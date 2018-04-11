@@ -1,12 +1,11 @@
 <!-- Login Box -->
-<div class="container text-center" style="margin: auto">
-
-  <div id="userError" class="alert alert-danger" style="visibility: hidden" role="alert">
+<div class="container " style="margin: auto; min-height: 90vh">
+  <div id="userError" class="alert alert-danger top-buffer" style="display: none" role="alert">
     It is dangerous to go alone. Take this!
   </div>
-  <div class="container rounded border" style="min-height: 300px; padding: 48px;">
+  <div class="container rounded border top-buffer" style="min-height: 300px; margin-bottom: 10px; padding: 48px;">
     <form>
-      <div class="row">
+      <div class="row text-center">
         <div class="col">
           <h4 class="my-4">Register
             <small style="color: orangered">Please enter you information.</small>
@@ -33,8 +32,16 @@
           <input id="password" class="rounded w-100" placeholder="password" type="password">
         </div>
       </div>
+      <div class="top-buffer row justify-content-start">
+        <div class="radio col-12">
+          <label><input type="radio" value="student" name="type" checked="checked">Student</label>
+        </div>
+        <div class="radio col-12">
+          <label><input type="radio" value="teacher" name="type">Admin</label>
+        </div>
+      </div>
       <div class="row top-buffer">
-        <div class="col 8">
+        <div class="col-10">
           By clicking Register you agree to our <a href="#">terms of service</a>.
         </div>
         <div class="col">
