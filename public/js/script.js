@@ -253,10 +253,10 @@ function changePostDisplay(routeParams){
         $("#author").text(snap2.val().fullName);
         if (firebase.auth().currentUser.uid == snap.val().User_ID) {
           console.log(true);
-          $("#title_row").append("<a href='javascript:void(0)' class='btn btn-outline-warning' onClick='window.location.href=\"/#!/course/" + routeParams.Course_ID + "/edit_anonpost/" + routeParams.AnonPost_ID + "\"'>Edit Post</a>");
+          $("#title_row").append("<a href='javascript:void(0)' class='btn btn-outline-warning' onClick='window.location.href=\"/#!/course/" + routeParams.Course_ID + "/edit/" + routeParams.AnonPost_ID + "\"'>Edit Post</a>");
         }
         if (firebase.auth().currentUser.uid == snap.val().User_ID || firebase.auth().currentUser.uid == snap0.val().Admin) {
-          $("#title_row").append("<a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deleteAnonPost(\"" + routeParams.Course_ID + "\", \"" + routeParams.AnonPost_ID + "\")'>Delete Post</a>");
+          $("#title_row").append("<a href='javascript:void(0)' class='btn btn-outline-danger' onClick='deletePost(\"" + routeParams.Course_ID + "\", \"" + routeParams.AnonPost_ID + "\")'>Delete Post</a>");
         }
       });
       $("#time_created").text(new moment(snap.val().Timestamp).format('MMMM Do YYYY, h:mm a'));
