@@ -21,6 +21,7 @@ function createCourse() {
             Semester: semester,
             Year: year
           });
+          window.location.href = "/#!/";
         }
       });
     }
