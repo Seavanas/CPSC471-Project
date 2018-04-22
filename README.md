@@ -6,4 +6,4 @@
 #### Sean Wen, Gurneck Johal, Ryan Pang, Wonsuk Lee <br>
 #### We made this website for our group project in database class
 ## Try It
-#### https://instacomm-da2a2.firebaseapp.com/#!/
+#### <a href="https://instacomm-da2a2.firebaseapp.com/#!/">https://instacomm-da2a2.firebaseapp.com/#!/</a>
