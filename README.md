@@ -1,5 +1,3 @@
-# Lecturit
----
 ## What is it
 #### A website that allows the student and teacher to communicate. The website provides a platform for the teacher to post their class related information, such as lecture notes, announcement, exam information, etc. For each post that the teacher creates, the student can view, comment, and ask question or more clarification about the post content. The teacher can also create notification, to notify everyone in the class the deadline on some event, it can be assignment deadline, date of exam, etc. There's also an anonymous mode, where member of the class can create anonymous post and comment about them anonymously as well. This acts as a way for the student to provide feedback for the teacher, such as the pace of the lecture. 
 ## How it works
